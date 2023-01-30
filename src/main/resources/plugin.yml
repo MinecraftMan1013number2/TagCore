@@ -1,0 +1,13 @@
+name: TagCore
+version: '${project.version}'
+main: com.minecraftman.tagcore.TagCore
+api-version: 1.13
+authors: [ MinecraftMan1013 ]
+description: The core plugin for Tag server
+website: https://github.com/MinecraftMan1013number2/TagCore
+commands:
+  queue:
+    description: 'The command to do everything related to the queue'
+    aliases:
+      - q
+      - que
