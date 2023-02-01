@@ -34,7 +34,7 @@ public class GameComponents {
 					q.getInventory().clear();
 // end change
 				}
-				cointdownToStart = main.getConfig().getInt("tag.StartDelay");
+				cointdownToStart = ConfigManager.getStartDelay();
 				for (int i = 0; i < cointdownToStart; i++) {
 					if (cointdownToStart > 0) {
 						if (QueueManager.getQueueLength() > 1) {

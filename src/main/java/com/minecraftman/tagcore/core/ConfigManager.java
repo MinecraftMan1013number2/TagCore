@@ -12,4 +12,8 @@ public class ConfigManager {
 	public static World getTagWorld() {
 		return Bukkit.getWorld(main.getConfig().getString("tag.TagWorld"));
 	}
+	
+	public static int getStartDelay() {
+		return main.getConfig().getInt("tag.StartDelay");
+	}
 }

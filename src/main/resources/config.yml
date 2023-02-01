@@ -1,6 +1,3 @@
 Tag:
   TagWorld: 'Tag'
   StartDelay: 30
-  CountdownBroadcastRule:
-    type: MOD
-    value: CountdownToStart, 10
