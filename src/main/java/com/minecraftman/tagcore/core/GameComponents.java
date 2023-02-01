@@ -57,7 +57,7 @@ public class GameComponents {
 								if (p.getWorld().equals(getTagWorld())) leaveGame(p);
 							}
 							
-							QueueManager.delete();
+							QueueManager.clearQueue();
 							return;
 						}
 					} else if (cointdownToStart <= 0) {

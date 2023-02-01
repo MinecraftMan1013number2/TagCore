@@ -48,7 +48,7 @@ public class QueueManager {
 		return queue.size();
 	}
 	
-	public static void delete() {
+	public static void clearQueue() {
 		queue.clear();
 	}
 }

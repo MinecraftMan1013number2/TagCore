@@ -22,7 +22,11 @@ public class BaseCommand implements CommandExecutor, TabCompleter {
 					player.sendMessage(Chat.translate("&cYou are not in the queue!"));
 				}
 			} else {
-				QueueManager.addPlayer(player);
+				if (QueueManager.addPlayer(player)) {
+					player.sendMessage(Chat.translate("&eYou have joined the queue!"));
+				} else {
+					player.sendMessage(Chat.translate("&cYou are already in the queue!"));
+				}
 			}
 		} else {
 			sender.sendMessage(Chat.translate("&4Only players can execute commands!"));
