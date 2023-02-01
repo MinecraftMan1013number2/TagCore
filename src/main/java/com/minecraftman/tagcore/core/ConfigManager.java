@@ -6,7 +6,7 @@ import org.bukkit.World;
 
 public class ConfigManager {
 	static TagCore main;
-	public ConfigManager(TagCore main) {
+	public static void setMain(TagCore main) {
 		ConfigManager.main = main;
 	}
 	public static World getTagWorld() {
