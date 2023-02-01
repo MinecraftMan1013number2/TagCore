@@ -52,10 +52,12 @@ public class GameComponents {
 						} else {
 							cointdownToStart = -1;
 							Bukkit.broadcastMessage(Chat.translate("&cThere is only 1 player in the queue! The startup has ended!"));
-//							set {players::*} to all players where [world of input = {TagWorld}]
-//							leaveGame({players::*})
-//							delete {queue::*}
-//							delete {players::*}
+							
+							for (Player p : Bukkit.getOnlinePlayers()) {
+								if (p.getWorld().equals(getTagWorld())) leaveGame(p);
+							}
+							
+							QueueManager.delete();
 							return;
 						}
 					} else if (cointdownToStart <= 0) {
@@ -87,5 +89,9 @@ public class GameComponents {
 		} else {
 			if (player != null) player.sendMessage(Chat.translate(""));
 		}
+	}
+	
+	public void leaveGame(Player player) {
+	
 	}
 }
