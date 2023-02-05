@@ -16,6 +16,8 @@ public final class TagCore extends JavaPlugin {
 		getCommand("queue").setTabCompleter(baseCommand);
 		
 		ConfigManager.setMain(this);
+		
+//		getServer().getPluginManager().registerEvents(new JoinQuit(), this);
 	}
 	
 	@Override

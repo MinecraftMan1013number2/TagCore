@@ -1,6 +1,7 @@
 package com.minecraftman.tagcore.queue;
 
 import com.minecraftman.tagcore.utils.Chat;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,13 +17,17 @@ public class BaseCommand implements CommandExecutor, TabCompleter {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (args.length >= 1 && args[0].equals("leave")) {
-				if (QueueManager.removePlayer(player)) {
+				if (QueueManager.onlineManager.removePlayer(player)) {
 					player.sendMessage(Chat.translate("&eYou have left the queue."));
 				} else {
-					player.sendMessage(Chat.translate("&cYou are not in the queue!"));
+					if (Bukkit.getOnlinePlayers().size() > 1) {
+						player.sendMessage(Chat.translate("&cYou are not in the queue!"));
+					} else {
+						player.sendMessage(Chat.translate("&cYou are the only player online! Invite someone to play with you!"));
+					}
 				}
 			} else {
-				if (QueueManager.addPlayer(player)) {
+				if (QueueManager.onlineManager.addPlayer(player)) {
 					player.sendMessage(Chat.translate("&eYou have joined the queue!"));
 				} else {
 					player.sendMessage(Chat.translate("&cYou are already in the queue!"));

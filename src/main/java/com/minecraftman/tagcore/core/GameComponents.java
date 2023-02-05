@@ -22,12 +22,12 @@ public class GameComponents {
 
 	public void startGame(@Nullable Player player) {
 		if (Bukkit.getOnlinePlayers().size() > 1) {
-			if (QueueManager.getQueueLength() >= 2) {
+			if (QueueManager.onlineManager.getQueueLength() >= 2) {
 				if (cointdownToStart != -1) return;
 				
 				String mesasge = Chat.translate("&aThere are enough people to start! Starting...");
 				Location spawn = getTagWorld().getSpawnLocation();
-				for (Player q : QueueManager.getQueue()) {
+				for (Player q : QueueManager.onlineManager.getQueue()) {
 					q.sendMessage(mesasge);
 // if changing code below, also change in joinQueue() -> else statement of 'if {CountdownToStart} is not set'
 					q.teleport(spawn);
@@ -37,7 +37,7 @@ public class GameComponents {
 				cointdownToStart = ConfigManager.getStartDelay();
 				for (int i = 0; i < cointdownToStart; i++) {
 					if (cointdownToStart > 0) {
-						if (QueueManager.getQueueLength() > 1) {
+						if (QueueManager.onlineManager.getQueueLength() > 1) {
 // MODIFY COUNTDOWN BROADCAST RULE HERE
 							if (cointdownToStart % 10 == 0) {
 								TextComponent msg = new TextComponent(String.format("§a§lThe tag game will be starting in %s seconds!" +
@@ -57,7 +57,7 @@ public class GameComponents {
 								if (p.getWorld().equals(getTagWorld())) leaveGame(p);
 							}
 							
-							QueueManager.clearQueue();
+							QueueManager.onlineManager.clearQueue();
 							return;
 						}
 					} else if (cointdownToStart <= 0) {
