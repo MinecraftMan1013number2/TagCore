@@ -13,9 +13,9 @@ import org.jetbrains.annotations.Nullable;
 import static com.minecraftman.tagcore.core.ConfigManager.getTagWorld;
 
 public class GameComponents {
-	TagCore main;
-	public GameComponents(TagCore main) {
-		this.main = main;
+	private static TagCore main;
+	public static void setMain(TagCore main) {
+		GameComponents.main = main;
 	}
 	
 	private int cointdownToStart = -1;

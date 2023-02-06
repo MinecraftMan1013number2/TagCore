@@ -24,6 +24,7 @@ public class QueueManager {
 			return false;
 		}
 		
+		/*
 		public static boolean insertPlayer(Player player, int pos) {
 			if (!isInQueue(player)) {
 				if (Bukkit.getOnlinePlayers().size() > 1) {
@@ -33,6 +34,7 @@ public class QueueManager {
 			}
 			return false;
 		}
+		 */
 		
 		public static boolean removePlayer(Player player) {
 			if (isInQueue(player)) {
@@ -64,7 +66,8 @@ public class QueueManager {
 	
 /*
 // Commented out since not used as of now
-// I made this because it was logical, but it has literally no use for my purpose (as there will only be a couple of players in the queue at any given moment)
+// I made this because it seemed logical, but it has literally no use for my purpose
+// (there will only be a couple of players in the queue at any given moment, so if they log off it doesn't matter)
 
 // OFFLINE QUEUE MANAGEMENT
 	public static class offlineManager {
