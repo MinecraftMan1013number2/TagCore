@@ -1,19 +1,19 @@
-package com.minecraftman.tagcore.core;
+package com.minecraftman.tagcore.core.managers;
 
 import com.minecraftman.tagcore.TagCore;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 public class ConfigManager {
-	private static TagCore main;
-	public static void setMain(TagCore main) {
-		ConfigManager.main = main;
+	private final TagCore main;
+	public ConfigManager(TagCore main) {
+		this.main = main;
 	}
-	public static World getTagWorld() {
+	public World getTagWorld() {
 		return Bukkit.getWorld(main.getConfig().getString("tag.TagWorld"));
 	}
 	
-	public static int getStartDelay() {
+	public int getStartDelay() {
 		return main.getConfig().getInt("tag.StartDelay");
 	}
 }

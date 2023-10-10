@@ -10,62 +10,82 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import static com.minecraftman.tagcore.core.ConfigManager.getTagWorld;
-
 public class GameComponents {
-	private static TagCore main;
-	public static void setMain(TagCore main) {
-		GameComponents.main = main;
+	private final TagCore main;
+	public GameComponents(TagCore main) {
+		this.main = main;
 	}
 	
 	private int cointdownToStart = -1;
 
 	public void startGame(@Nullable Player player) {
 		if (Bukkit.getOnlinePlayers().size() > 1) {
-			if (QueueManager.onlineManager.getQueueLength() >= 2) {
+			if (QueueManager.getQueueLength() >= 2) {
 				if (cointdownToStart != -1) return;
 				
 				String mesasge = Chat.translate("&aThere are enough people to start! Starting...");
-				Location spawn = getTagWorld().getSpawnLocation();
-				for (Player q : QueueManager.onlineManager.getQueue()) {
+				Location spawn = TagCore.getConfigManager().getTagWorld().getSpawnLocation();
+				for (Player q : QueueManager.getQueue()) {
 					q.sendMessage(mesasge);
 // if changing code below, also change in joinQueue() -> else statement of 'if {CountdownToStart} is not set'
 					q.teleport(spawn);
 					q.getInventory().clear();
 // end change
 				}
-				cointdownToStart = ConfigManager.getStartDelay();
-				for (int i = 0; i < cointdownToStart; i++) {
-					if (cointdownToStart > 0) {
-						if (QueueManager.onlineManager.getQueueLength() > 1) {
-// MODIFY COUNTDOWN BROADCAST RULE HERE
-							if (cointdownToStart % 10 == 0) {
-								TextComponent msg = new TextComponent(String.format("§a§lThe tag game will be starting in %s seconds!" +
-										"\n§a§lClick this message to join!", cointdownToStart));
-								msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "queue"));
-								
-								for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-									onlinePlayer.spigot().sendMessage(msg);
-								}
-							}
-							Bukkit.getScheduler().runTaskLater(main, () -> cointdownToStart--, 20L);
-						} else {
-							cointdownToStart = -1;
-							Bukkit.broadcastMessage(Chat.translate("&cThere is only 1 player in the queue! The startup has ended!"));
+				cointdownToStart = TagCore.getConfigManager().getStartDelay();
+				int i = cointdownToStart;
+				
+				/*
+				public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+//        for (int i = 0; i < 10; i++) {
+//            Bukkit.getScheduler().runTaskLater(this, (task) -> {
+//                Bukkit.broadcastMessage("test");
+//            }, 20L*i);
+//        }
+        
+        new BukkitRunnable() {
+            private int i = 0;
+    
+            @Override
+            public void run() {
+                if (i >= 10) {
+                    cancel();
+                    return;
+                }
+        
+                Bukkit.broadcastMessage("test " + i);
+                i++;
+            }
+        }.runTaskTimer(this, 20L, 20L);
+        return true;
+    }
+				 */
+				
+				Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
+					if (QueueManager.getQueueLength() > 1) {
+						if (i % 10 == 0) {
+							TextComponent msg = new TextComponent(String.format("§a§lThe tag game will be starting in %s seconds!" +
+									"\n§a§lClick this message to join!", i));
+							msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "queue join"));
 							
-							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.getWorld().equals(getTagWorld())) leaveGame(p);
+							for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+								onlinePlayer.spigot().sendMessage(msg);
 							}
-							
-							QueueManager.onlineManager.clearQueue();
-							return;
 						}
-					} else if (cointdownToStart <= 0) {
-						break;
+// need to wait 1 tick per loop, not schedule a new task every loop
+//						Bukkit.getScheduler().runTaskLater(main, () -> cointdownToStart--, 20L);
 					} else {
-						return;
+						Bukkit.broadcastMessage(Chat.translate("&cThere is only 1 player in the queue! The startup has ended!"));
+						
+						for (Player p : QueueManager.getQueue()) {
+							leaveGame(p);
+						}
+						
+						QueueManager.clearQueue();
+//						cancel
 					}
-				}
+				}, 20L, 20L);
+				
 				/*
 			delete {CountdownToStart}
 			set {timer} to {@Tag Game Time}
