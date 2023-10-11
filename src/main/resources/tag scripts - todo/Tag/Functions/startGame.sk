@@ -1,0 +1,58 @@
+options:
+	Start Delay: 30
+	Countdown Broadcast Rule: mod({CountdownToStart}, 10)
+
+	# in seconds
+	Tag Game Time: 300
+
+# function startGame(p: player = {_none}):
+	# if number of online players > 1:
+		# if size of {queue::*} >= 2:
+			# {CountdownToStart} is not set
+			# send "&aThere are enough people to start! Starting..." to {queue::*}
+			# if chaning code below, also change in joinQueue() -> else statement of 'if {CountdownToStart} is not set'
+			# teleport {queue::*} to spawn of {TagWorld}
+			# clear {queue::*}'s inventory
+			# end change
+			# set {CountdownToStart} to {@Start Delay}
+			# loop {@Start Delay} times:
+				# if {CountdownToStart} > 0:
+					# if size of {queue::*} > 1:
+					# 	if {@Countdown Broadcast Rule} is 0:
+					# 		send formatted "<command:/queue>&a&lThe tag game will be starting in %{CountdownToStart}% seconds!" to all players
+					# 		send formatted "<command:/queue>&a&lClick this message to join!" to all players
+					# 	wait 1 second
+					# 	remove 1 from {CountdownToStart}
+					# else:
+					# 	delete {CountdownToStart}
+					# 	wait 1 tick
+					# 	broadcast "&cThere is only 1 player in the queue! The startup has ended!"
+					# 	set {players::*} to all players where [world of input = {TagWorld}]
+					# 	wait 1 tick
+					# 	leaveGame({players::*})
+					# 	delete {queue::*}
+					# 	delete {players::*}
+					# 	stop
+				# else if {CountdownToStart} <= 0:
+					# stop loop
+				# else:
+					# stop
+			# delete {CountdownToStart}
+			# set {timer} to {@Tag Game Time}
+			# set {players::*} to all players where [world of input is {TagWorld}]
+			# set {tagger} to a random element out of {players::*}
+			# delete {queue::*}
+			# setTagger({tagger})
+			# send title "&4&lYou are the tagger!" with subtitle "&cTag other people!" to {Tagger} for 2 seconds
+			# modifyTeam({tagger}, "tagger")
+			# giveItems({tagger})
+			# loop {players::*} where [input != {tagger}]:
+			# 	modifyTeam(loop-value, "runner")
+			# 	giveItems(loop-value)
+			# broadcast "&aThe tagger has been chosen!" to {TagWorld}
+			# broadcast "&aThe tagger is &a&l%{tagger}%&a!" to {TagWorld}
+			# send formatted "<cmd:/queue>&aThe tag game has started! Join the queue with ""/queue"" or click me to join!" to all players where [input's world is not {TagWorld}]
+		# else:
+		# 	send "&dYou are the only one in the queue! Invite someone else to join you!" to {_p}
+	# else:
+	# 	send "&cThere aren't enough players to start the game!" to {_p}

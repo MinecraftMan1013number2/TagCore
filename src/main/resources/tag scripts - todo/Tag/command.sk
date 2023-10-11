@@ -1,0 +1,20 @@
+command /tag <text="start">:
+	permission: tag.*
+	permission message: &cNo permission
+	trigger:
+		if arg-1 is "join":
+			joinQueue(player)
+		if arg-1 is "stop" or "end":
+			endGame(player)
+		else if arg-1 is "start":
+			startGame(player)
+		else if arg-1 is "leave":
+			leaveGame(player)
+		else if arg-1 is "reload" or "rl":
+			execute player command "/sk reload tag"
+		else:
+			send "&cIncorrect usage"
+
+
+on tab complete of "/tag":
+	set tab completions for position 1 to "join", "start", "stop", "reload", and "leave"

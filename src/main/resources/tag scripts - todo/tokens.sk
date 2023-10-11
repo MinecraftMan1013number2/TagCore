@@ -1,0 +1,62 @@
+# tag tokens given in Tag/damage.sk
+
+options:
+	Online Reward: 10
+
+on join:
+	if {tokens::%player's uuid%} is not set:
+		set {tokens::%player's uuid%} to 0
+
+	# every 3 minutes, give player tag tokens for online time
+	while player is online:
+		loop 60 times:
+			wait 3 seconds
+			if player is not online:
+				stop
+		add {@Online Reward} to {tokens::%player's uuid%}
+		send "&3+{@Online Reward} Tag Tokens - Online Reward"
+
+on quit:
+	if {tokens::%player's uuid%} <= 0:
+		delete {tokens::%player's uuid%}
+
+# every minute:
+# 	if {Tagger} is set:
+# 		loop all players in {TagWorld}:
+# 			if {tokens::%loop-value's uuid%} is set:
+# 				add 1 to {tokens::%loop-value's uuid%}
+
+on tab complete of "/tokens":
+	set tab completions for position 1 to "give", "add", "take", "remove", "reload", "reset" and "bal"
+
+command /tokens <text> [<player>] [<int>]:
+	permission: tag.tokens
+	permission message: &cNo permission
+	usage: &c/tokens <give | take | reset | bal> [<player>] [<amount>]
+	trigger:
+		if arg-2 is set:
+			if arg-1 is "give" or "add":
+				if arg-3 is not set:
+					execute player command "/tokens"
+				else:
+					add arg-3 to {tokens::%arg-2's uuid%}
+					send "&aAdded %arg-3%&a tokens to %arg-2%&a's balance!"
+			else if arg-1 is "take" or "remove":
+				if arg-3 is not set:
+					execute player command "/tokens"
+				else:
+					remove arg-3 from {tokens::%arg-2's uuid%}
+					send "&aRemoved %arg-3%&a tokens to %arg-2%&a's balance!"
+			else if arg-1 is "bal" or "balance":
+				send "&a%arg-2%&a has &2%{tokens::%arg-2's uuid%} ? 0% &atokens."
+			else if arg-1 is "reset":
+				set {tokens::%arg-2's uuid%} to 0
+				send "&aReset %arg-2%&a's token balance!"
+			else:
+				execute player command "/tokens"
+		else if arg-1 is "rl" or "reload":
+			execute player command "/sk reload tokens"
+		else if arg-1 is "bal" or "balance":
+			send "&aYou have &2%{tokens::%player's uuid%} ? 0% &atokens."
+		else:
+			execute player command "/tokens"

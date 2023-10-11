@@ -1,0 +1,68 @@
+options:
+ 
+    DATA: skript-types
+ 
+function declareUsableType(addon: text, user-input: text):
+ 
+    set {_type} to {_user-input} parsed as type
+ 
+    {_type} is set
+ 
+    add {_type} to {{@DATA}::types::*}
+    set {_index} to amount of {{@DATA}::types::*}
+ 
+    set {{@DATA}::type-of::%{_user-input}%} to {_type}
+    set {{@DATA}::user-input-of::%{_type}%} to {_user-input}
+    set {{@DATA}::index-of::%{_type}%} to {_index}
+ 
+    add {_index} to {{@DATA}::addons::%{_addon}%::types::*}
+ 
+    if {{@DATA}::addons::%{_addon}%} isn't set:
+ 
+        set {{@DATA}::addons::%{_addon}%} to {_addon}
+ 
+function declareUsableTypes(addon: text, types: texts):
+ 
+    loop {_types::*}:
+        declareUsableType({_addon}, loop-value)
+ 
+on script load:
+ 
+    delete {{@DATA}::*}
+ 
+    set {{@DATA}::object-type} to "object" parsed as type
+ 
+    # Data Types
+    declareUsableTypes("skript", ("type", "boolean", "integer", "number", and "text"))
+ 
+    # Players & Entities
+    declareUsableTypes("skript", ("player", "offline player", "command sender", "living entity", "entity", and "projectile"))
+ 
+    # Blocks & Locations
+    declareUsableTypes("skript", ("block", "location", "vector", and "direction"))
+ 
+    # Worlds
+    declareUsableTypes("skript", ("biome", "chunk", "world", and "weather"))
+ 
+    # Items & Inventories
+    declareUsableTypes("skript", ("item", "item type", "potion effect", "inventory", "slot", "inventory action", and "click action"))
+ 
+    # Enchantments
+    declareUsableTypes("skript", ("enchantment", and "enchantment type"))
+ 
+    # Time
+    declareUsableTypes("skript", ("time", "timespan", "timeperiod", and "date"))
+ 
+    # Misc
+    declareUsableTypes("skript", ("gamemode", "damage cause", "color", "tree type", and "particle effect"))
+ 
+on script unload:
+ 
+    delete {{@DATA}::*}
+ 
+function typeOf(var: object) :: type:
+ 
+    loop {{@DATA}::types::*}:
+        if {_var} is loop-value:
+            return loop-value
+    return {{@DATA}::object-type}

@@ -1,0 +1,65 @@
+options:
+	Title: "&9&lTag!"
+	Line 11: "&9&l&m                    "
+	Line 10: "&9&lCurrent Game:"
+	Line 9 Tagger: "&7&l» &7Tagger: %{tagger}%"
+	Line 9 No Tagger: "&7&l» &7Tagger: None"
+	Line 8 Timer: "&7&l» &7Timer: %formatTime({timer})%"
+	Line 8 No Timer: "&7&l» &7Timer: None"
+	Line 7: "&l&r"
+	Line 6: "&9&lPlayers online:"
+	Line 5: "&7&l» &7%{PlayerCount}%/10"
+	Line 4: "&e"
+	Line 3: "&9&lTag Tokens:"
+	Line 2: "&7&l» &6%formatNumber({tokens::%loop-player's uuid%}) ? 0%"
+	# Line 2: "&7&l» &6Coming soon!"
+	Line 1: "&9&l&m                    "
+
+on join:
+	add 1 to {PlayerCount}
+
+on quit:
+	remove 1 from {PlayerCount}
+	clear scoreboard of player
+
+on skript stop:
+	set {PlayerCount} to 0
+
+every second:
+	loop all players:
+		set title of loop-player's scoreboard to {@Title}
+		set line 11 of loop-player's scoreboard to {@Line 11}
+		set line 10 of loop-player's scoreboard to {@Line 10}
+		if {tagger} is set:
+			set line 9 of loop-player's scoreboard to {@Line 9 Tagger}
+		else:
+			set line 9 of loop-player's scoreboard to {@Line 9 No Tagger}
+		if {timer} is set:
+			set line 8 of loop-player's scoreboard to {@Line 8 Timer}
+		else:
+			set line 8 of loop-player's scoreboard to {@Line 8 No Timer}
+		set line 7 of loop-player's scoreboard to {@Line 7}
+		set line 6 of loop-player's scoreboard to {@Line 6}
+		set line 5 of loop-player's scoreboard to {@Line 5}
+		set line 4 of loop-player's scoreboard to {@Line 4}
+		set line 3 of loop-player's scoreboard to {@Line 3}
+		set line 2 of loop-player's scoreboard to {@Line 2}
+		set line 1 of loop-player's scoreboard to {@Line 1}
+
+function formatNumber(n: object) :: text:
+	set {_n} to "%{_n}%"
+	set {_s::*} to split {_n} at "."
+	if {_s::2} is not set:
+		return a({_n})
+	else:
+		return "%a({_s::1})%.%{_s::2}%"
+ 
+function a(b: text) :: text:
+	if length of {_b} > 3:
+		return "%a(first length of {_b} - 3 characters of {_b})%,%last 3 characters of {_b}%"
+	return {_b}
+
+command /clearsb:
+	trigger:
+		clear player's scoreboard
+		send "&aCleared your board!"

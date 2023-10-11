@@ -1,0 +1,41 @@
+on player world change:
+	if {players::*} contains player:
+		"%event-world%" is not "%{TagWorld}%"
+		leaveGame(player)
+	if {queue::*} contains player:
+		"%event-world%" is not "%{TagWorld}%"
+		remove player from {queue::*}
+	if past event-world was {TagWorld}:
+		removeArmor(player)
+
+on command "/spawn":
+	if {players::*} contains player:
+		leaveGame(player)
+	player's gamemode is not creative
+	lobbyItems(player)
+
+on quit:
+	if {Tagger} is player:
+		set helmet of player to air
+		set chestplate of player to air
+		set leggings of player to air
+		set boots of player to air
+		broadcast "&a&l%player% was the tagger and left!" to {TagWorld}
+		wait 1 tick
+		if number of online players > 1:
+			delete {tagger}
+			delete {players::*}
+			wait 1 tick
+			set {players::*} to all players where [world of input is {TagWorld}]
+			set {Tagger} to a random element out of {players::*}
+			broadcast "&aThe new tagger is &a&l%{tagger}%&a!" to {TagWorld}
+			setTagger({tagger})
+			modifyTeam({tagger}, "tagger")
+			leaveTeam(player, "tagger")
+		else:
+			leaveTeam(player, "tagger")
+			broadcast "&aThere aren't enough players to continue the game!"
+			endGame()
+			
+	if {players::*} contains player:
+		saveItems(player)

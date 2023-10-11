@@ -1,0 +1,6 @@
+function logShop(type: boolean, p: player, log: text):
+	set {_uuid} to {_p}'s uuid
+	if {_type} is true:
+		log "%{_p}% [UUID: %{_uuid}%] bought %{_log}%!" to "shop/successes.log"
+	else:
+		log "%{_p}% [UUID: %{_uuid}%] tried to buy %{_log}%!" to "shop/fails.log"

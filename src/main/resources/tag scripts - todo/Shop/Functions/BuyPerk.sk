@@ -1,0 +1,105 @@
+on load:
+	set {shop::perk::snowball} to 5
+	set {shop::perk::egg} to 5
+	set {shop::perk::enderpearl} to 15
+	set {shop::perk::speed} to 10
+	set {shop::perk::jump_boost} to 5
+	set {shop::perk::double_jump} to 5
+	set {shop::perk::launcher} to 5
+	set {shop::perk::bow} to 20
+
+function buyPerk(p: player, type: text):
+	set {_uuid} to {_p}'s uuid
+	if {_type} is "snowball":
+		if {tokens::%{_uuid}%} >= {shop::perk::%{_type}%}:
+			remove {shop::perk::%{_type}%} from {tokens::%{_uuid}%}
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 16 snowballs named "&f&lSnowball"
+			send "&aYou bought 16x snowballs!" to {_p}
+			logShop(true, {_p}, "16x snowballs")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "16x snowballs")
+			stop
+	else if {_type} is "egg":
+		if {tokens::%{_uuid}%} >= {shop::perk::%{_type}%}:
+			remove {shop::perk::%{_type}%} from {tokens::%{_uuid}%}
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 16 eggs named "&f&lEgg"
+			send "&aYou bought 16x eggs!" to {_p}
+			logShop(true, {_p}, "16x eggs")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "16x snowballs")
+			stop
+	else if {_type} is "enderpearl":
+		if {tokens::%{_uuid}%} >= {shop::perk::%{_type}%}:
+			remove {shop::perk::%{_type}%} from {tokens::%{_uuid}%}
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 1 of ender pearl named "&9&lEnder Pearl"
+			send "&aYou bought an Ender Pearl!" to {_p}
+			logShop(true, {_p}, "an enderpearl")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "an enderpearl")
+			stop
+	else if {_type} is "speed":
+		if {tokens::%{_uuid}%} >= {shop::perk::%{_type}%}:
+			remove {shop::perk::%{_type}%} from {tokens::%{_uuid}%}
+			set {_nbt} to nbt compound from "{Count:1b,id:""minecraft:splash_potion"",tag:{CustomPotionEffects:[{Amplifier:2,Duration:200,Id:1}],Potion:""water""}}"
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 1 of splash potion with nbt {_nbt} named "&bSpeed 2" with lore "&oYa wanna see some real speed bish??" and "&o*Sharp inhale*"
+			send "&aYou bought a splash potion of Speed!" to {_p}
+			logShop(true, {_p}, "a splash potion of speed")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "a splash potion of speed")
+			stop
+	else if {_type} is "jump_boost":
+		if {tokens::%{_uuid}%} >= {shop::perk::%{_type}%}:
+			remove {shop::perk::%{_type}%} from {tokens::%{_uuid}%}
+			set {_nbt} to nbt compound from "{Count:1b,id:""minecraft:splash_potion"",tag:{CustomPotionEffects:[{Amplifier:1b,Duration:600,Id:8b}],Potion:""minecraft:water""}}"
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 1 of splash potion with nbt {_nbt} named "&aJump Boost 2"
+			send "&aYou bought a splash potion of Jump Boost!" to {_p}
+			logShop(true, {_p}, "a splash potion of jump boost")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "a splash potion of jump boost")
+			stop
+	else if {_type} is "double_jump":
+		if {tokens::%{_uuid}%} >= {shop::perk::%{_type}%}:
+			remove {shop::perk::%{_type}%} from {tokens::%{_uuid}%}
+			add 1 to {DoubleJumps::%{_uuid}%}
+			send "&aYou bought a double jump!" to {_p}
+			send "&aYour double jumps: &a&l%{DoubleJumps::%{_uuid}%}%" to {_p}
+			logShop(true, {_p}, "a double jump")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "a double jump")
+			stop
+	else if {_type} is "launcher":
+		if {tokens::%{_uuid}%} >= {shop::perk::%{_type}%}:
+			remove {shop::perk::%{_type}%} from {tokens::%{_uuid}%}
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 1 feather named "&9Launcher" with lore "&bRight click to launch yourself!"
+			send "&aYou bought a launcher!" to {_p}
+			logShop(true, {_p}, "a personal launcher")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "a personal launcher")
+			stop
+	else if {_type} is "bow":
+		if {tokens::%{_uuid}%} >= {shop::perk::%{_type}%}:
+			remove {shop::perk::%{_type}%} from {tokens::%{_uuid}%}
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 1 bow with nbt (nbt compound from "{Unbreakable:1b}")
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 8 arrows
+			send "&aYou bought a bow with 8 arrows!" to {_p}
+			logShop(true, {_p}, "a bow")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "a bow")
+			stop
+	
+	else:
+		send "&4An error has occurred. Please contact an administrator!" to {_p}
+		log "Shop error with function buyPerk! (Player: %{_p}%, Item: %{_type}%, Price: %{shop::perk::%{_type}%}%)" to "shop/errors.log"
+		stop
+	
+	
+	send "&aYour balance: %formatNumber({tokens::%{_uuid}%})%" to {_p}
+	send "&a&oYou will get your items when the game starts." to {_p}

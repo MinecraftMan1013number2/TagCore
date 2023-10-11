@@ -1,0 +1,26 @@
+function openArrowShop(p: player):
+	set {_arrowShop} to a new chest inventory with 3 rows with name "&9&lShop - Arrows"
+	set slots (all integers from 0 to 25) of {_arrowShop} to orange stained glass pane named "&a"
+	set slots (all integers from 14 to 16) of {_arrowShop} to black stained glass pane named "&a"
+
+	set slot 10 of {_arrowShop} to arrow named "&7&lNormal Arrows (8x)" with lore "&7Shoot people to tag them (as tagger)", "&7or slow them down (as a runner).", "", "&7&oCan be used at any time", "", and "&6Cost: $%{shop::perk::arrow::normal}%"
+	set slot 11 of {_arrowShop} to arrow named "&8&lKnockback Arrows (8x)" with lore "&8Shoot people to knock them back!", "", "&8&oOnly works on the tagger", "", and "&6Cost: $%{shop::perk::arrow::knockback}%"
+	set slot 12 of {_arrowShop} to spectral arrow named "&6&lSpectral Arrows (8x)" with lore "&6Shoot people to make them glow!", "", "&6&oCan be used at any time", "", and "&6Cost: $%{shop::perk::arrow::spectral}%"
+	set slot 13 of {_arrowShop} to arrow named "&3&lRadius Arrows (8x)" with lore "&3Shoot the ground to launch", "&3all players within 5 blocks of where the arrow landed!", "" and "&3&oCan be used at any time", "", and "&6Cost: $%{shop::perk::arrow::radius}%"
+	set slot 26 of {_arrowShop} to barrier named "&4Back"
+
+	open {_arrowShop} to {_p}
+
+on inventory click:
+	if name of event-inventory is "&9&lShop - Arrows":
+		cancel event
+		if index of event-slot is 10:
+			buyArrow(player, "normal")
+		else if index of event-slot is 11:
+			buyArrow(player, "knockback")
+		else if index of event-slot is 12:
+			buyArrow(player, "spectral")
+		else if index of event-slot is 13:
+			buyArrow(player, "radius")
+		else if index of event-slot is 26:
+			openPerksShop(player)

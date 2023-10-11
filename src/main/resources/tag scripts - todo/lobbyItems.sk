@@ -1,0 +1,21 @@
+on click with nether star:
+	if name of event-item is "&6&lShop":
+		execute player command "/shop"
+
+on click with clock:
+	if name of event-item is "&6&lPlay":
+		execute player command "/queue"
+
+on inventory click:
+	event-itemtype is nether star or clock
+	player's gamemode is not creative
+	cancel event
+	
+on drop:
+	event-itemtype is nether star or clock
+	player's gamemode is not creative
+	cancel event
+
+function lobbyItems(p: player):
+	set slot 2 of {_p} to clock named "&6&lPlay"
+	set slot  6 of {_p} to nether star named "&6&lShop"

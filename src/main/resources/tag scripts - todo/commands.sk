@@ -1,0 +1,29 @@
+command /discord:
+	trigger:
+		send formatted "<ttp:Click me!><link:https://discord.gg/dAze7FuJfa>&9Join the discord! &bhttps://discord.gg/dAze7FuJfa"
+
+command /sethead:
+	permission: tag.sethead
+	trigger:
+		set {TaggerHead} to player's held item
+
+command /setchest:
+	permission: tag.setchest
+	trigger:
+		set {TaggerChestplate} to player's held item
+
+command /setlegs:
+	permission: tag.setlegs
+	trigger:
+		set {TaggerLeggings} to player's held item
+
+command /setboots:
+	permission: tag.setboots
+	trigger:
+		set {TaggerBoots} to player's held item
+
+command /setplayercount <int>:
+	permission: playercount.set
+	trigger:
+		set {PlayerCount} to arg-1
+		send "New player count: %{PlayerCount}%"

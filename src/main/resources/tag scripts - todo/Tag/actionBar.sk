@@ -1,0 +1,33 @@
+options:
+	Game Time Notification Rule 1: mod({timer}, 60) = 0
+	Game Time Notification Rule 2: {timer} = 30
+	Game Time Notification Rule 3: {timer} = 15
+	Game Time Notification Rule 4: {timer} = 10
+	Game Time Notification Rule 5: {timer} = 5
+
+every second:
+	if {tagger} is set:
+		remove 1 from {timer}
+		send action bar "&b&lTime Remaining: &b%formatTime({timer})%" to all players
+		if {timer} <= 0:
+			endGame()
+			stop
+		set {_notify} to true if {@Game Time Notification Rule 1}
+		set {_notify} to true if {@Game Time Notification Rule 2}
+		set {_notify} to true if {@Game Time Notification Rule 3}
+		set {_notify} to true if {@Game Time Notification Rule 4}
+		set {_notify} to true if {@Game Time Notification Rule 5}
+		if {_notify} is set:
+			set {_timeLeft} to "%{timer}% seconds" parsed as a timespan
+			set {_grammar} to "is" if "%{_timeLeft}%" starts with "1 min" or "1 sec", else "are"
+			broadcast "" to {TagWorld}
+			broadcast " &eThere %{_grammar}% &6%{_timeLeft}%&e left!" to {TagWorld}
+			broadcast "" to {TagWorld}
+	else:
+		send action bar "&bThere is no game running!" to all players
+
+on skript stop:
+	delete {tagger}
+	delete {timer}
+	delete {queue::*}
+	delete {players::*}

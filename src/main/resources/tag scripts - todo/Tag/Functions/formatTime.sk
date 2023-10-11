@@ -1,0 +1,20 @@
+function formatTime(t: number) :: text:
+	set {_m} to {_t} / 60
+	set {_s} to ({_m} - rounded down {_m}) * 60
+	set {_m} to rounded down {_m}
+
+	set {_split.m::*} to "%{_m}%" split by ""    
+	if size of {_split.m::*} > 2:
+		set {_d::1} to {_split.m::1}
+		set {_d::2} to {_split.m::2}
+	else:
+		set {_d::2} to {_split.m::1}
+
+	set {_split.s::*} to "%{_s}%" split by ""    
+	if size of {_split.s::*} > 2:
+		set {_d::3} to {_split.s::1}
+		set {_d::4} to {_split.s::2}    
+	else:
+		set {_d::4} to {_split.s::1}    
+
+	return "%{_d::1} ? ""%%{_d::2} ? 0%:%{_d::3} ? 0%%{_d::4} ? 0%"

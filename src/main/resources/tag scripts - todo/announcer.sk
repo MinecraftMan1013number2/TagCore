@@ -1,0 +1,40 @@
+options:
+
+#  You can put the time in:
+# Ticks (20 ticks = 1 second)
+# Seconds
+# Minutes
+	time: 2 minutes
+
+	prefix: &5[&2Announcer&5]&r
+
+# ----------------------------------------------
+
+	messages: "<link:https://discord.gg/dAze7FuJfa>&9Dont forget to join our discord! &bhttps://discord.gg/dAze7FuJfa", "<ttp:Click to get the IP!><sgt:TagNotMe.minehut.gg>&9Be sure to save the IP! &bTagNotMe.minehut.gg", and "<cmd:/shop>&eBuy stuff from the shop to gain an advantage! Click me to open the shop!"
+
+on script load:
+	wait 1 tick
+	set {announcer} to true
+	broadcast "{@prefix} Announcer has been enabled!"
+
+every {@time}:
+	if {announcer} is true:
+		play sound "entity.experience_orb.pickup" at volume 100 at all players
+		set {_msg} to a random object out of {@messages}
+		broadcast ""
+		broadcast formatted {_msg}
+		broadcast ""
+
+command /announcer [<text>]:
+	permission: announcer.*
+	trigger:
+		if arg-1 is "on":
+			broadcast "{@prefix} Announcer has been enabled!"
+			set {announcer} to true
+		else if arg-1 is "off":
+			broadcast "{@prefix} Announcer has been disabled!"
+			set {announcer} to false
+		else if arg-1 is "reload":
+			execute player command "/sk reload announcer"
+		else:
+			send "&3Announcer status: &3&l%{announcer}%"

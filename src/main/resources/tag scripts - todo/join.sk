@@ -1,0 +1,27 @@
+options:
+	Join Message: "&8[&a+&8]&7 %{_p}%"
+	First Join Message: "&8[&a+&8]&c&l NEW &7%{_p}%"
+	Leave Message: "&8[&c-&8]&7 %{_p}%"
+
+on join:
+	set {_p} to player
+	if player has not played before:
+		set join message to {@First Join Message}
+	else:
+		set join message to {@Join Message}
+	if player is not op:
+		clear player's inventory
+	lobbyItems(player)
+
+on quit:
+	set {_p} to player
+	set quit message to {@Leave Message}
+	
+	remove player from {players::*}
+	remove player from {queue::*}
+
+function joinMsg(p: player):
+	broadcast {@Join Message}
+
+function quitMsg(p: player):
+	broadcast {@Leave Message}

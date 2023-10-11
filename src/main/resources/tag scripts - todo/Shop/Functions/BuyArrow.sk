@@ -1,0 +1,57 @@
+on load:
+	set {shop::perk::arrow::normal} to 3
+	set {shop::perk::arrow::knockback} to 5
+	set {shop::perk::arrow::spectral} to 3
+	set {shop::perk::arrow::radius} to 8
+
+function buyArrow(p: player, type: text):
+	set {_uuid} to {_p}'s uuid
+	if {_type} is "normal":
+		if {tokens::%{_uuid}%} >= {shop::perk::arrow::%{_type}%}:
+			remove {shop::perk::arrow::%{_type}%} from {tokens::%{_uuid}%}
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 8 arrows
+			send "&aYou bought 8x Normal Arrows!" to {_p}
+			logShop(true, {_p}, "8x normal arrows")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "8x normal arrows")
+			stop
+	else if {_type} is "knockback":
+		if {tokens::%{_uuid}%} >= {shop::perk::arrow::%{_type}%}:
+			remove {shop::perk::arrow::%{_type}%} from {tokens::%{_uuid}%}
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 8 arrows named "&7Knockback Arrow"
+			send "&aYou bought 8x Knockback Arrows!" to {_p}
+			logShop(true, {_p}, "8x knockback arrows")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "8x knockback arrows")
+			stop
+	else if {_type} is "spectral":
+		if {tokens::%{_uuid}%} >= {shop::perk::arrow::%{_type}%}:
+			remove {shop::perk::arrow::%{_type}%} from {tokens::%{_uuid}%}
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 8 spectral arrows named "&6Spectral Arrow"
+			send "&aYou bought 8x Spectral Arrows!" to {_p}
+			logShop(true, {_p}, "8x spectral arrows")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "8x spectral arrows")
+			stop
+	else if {_type} is "radius":
+		if {tokens::%{_uuid}%} >= {shop::perk::arrow::%{_type}%}:
+			remove {shop::perk::arrow::%{_type}%} from {tokens::%{_uuid}%}
+			set {items::%{_uuid}%::%size of {items::%{_uuid}%::*} + 1%} to 8 arrows named "&3Radius Arrow"
+			send "&aYou bought 8x Radius Arrows!" to {_p}
+			logShop(true, {_p}, "8x radius arrows")
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}
+			logShop(false, {_p}, "8x radius arrows")
+			stop
+
+	else:
+		send "&4An error has occurred. Please contact an administrator!" to {_p}
+		log "Shop error with function buyPerk! (Player: %{_p}%, Item: %{_type}%, Price: %{shop::perk::%{_type}%}%)" to "shop/errors.log"
+		stop
+	
+	
+	send "&aYour balance: %formatNumber({tokens::%{_uuid}%})%" to {_p}
+	send "&a&oYou will get your items when the game starts." to {_p}

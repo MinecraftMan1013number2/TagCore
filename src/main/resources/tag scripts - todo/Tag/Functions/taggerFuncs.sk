@@ -1,0 +1,12 @@
+function setTagger(p: player):
+	set {Tagger} to {_p}
+	equip {_p} with {TaggerHead}
+	equip {_p} with {TaggerChestplate}
+	equip {_p} with {TaggerLeggings}
+	equip {_p} with {TaggerBoots}
+
+function removeArmor(p: player):
+	set helmet of {_p} to air
+	set chestplate of {_p} to air
+	set leggings of {_p} to air
+	set boots of {_p} to air

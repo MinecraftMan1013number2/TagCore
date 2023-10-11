@@ -1,0 +1,9 @@
+on command:
+	command is "vanish" or "v"
+	wait 1 tick
+	if player has potion effect invisibility:
+		remove 1 from {PlayerCount}
+		quitMsg(player)
+	else:
+		add 1 to {PlayerCount}
+		joinMsg(player)

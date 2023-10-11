@@ -1,0 +1,127 @@
+options:
+	Launcher Forward Speed: 1
+	Launcher Up Speed: 1
+
+	Double-Jump Up: 1
+	Double-Jump Forward : 1
+
+	Radius Arrow Block Radius: 10
+	Radius Arrow Upwards Speed: 1
+
+	Knockback Arrow KB Strength: 3
+
+# SNOWBALL
+# EGG
+# ENDER PEARL
+# SPEED
+# JUMP BOOST
+
+on shoot:
+	if world of shooter is not {TagWorld}:
+		cancel event
+		send "&cYou can only use items if you are in the game!" to shooter
+	else:
+		if {timer} is not set:
+			cancel event
+			send "&cYou can only use items once the game has started!" to shooter
+
+# ARROWS
+import:
+	org.bukkit.event.entity.EntityShootBowEvent
+	org.bukkit.entity.AbstractArrow$PickupStatus
+
+# buyPerk(player, "bow")
+# buyPerk(player, "normal")
+# buyPerk(player, "knockback")
+# buyPerk(player, "spectral")
+# buyPerk(player, "raduis")
+
+on EntityShootBowEvent:
+	set {_p} to "MinecraftMan1013" parsed as a player
+	send "shoot" to {_p}
+	wait 1 tick
+	event.getProjectile() is alive
+	if event.getEntity() is a player:
+		set {_i} to 1 of event.getConsumable()
+		if name of {_i} is not set:
+			set metadata tag "type" of event.getProjectile() to "normal"
+			event.getProjectile().setPickupStatus(PickupStatus.DISALLOWED)
+		if name of {_i} is "&7Knockback Arrow":
+			set metadata tag "type" of event.getProjectile() to "knockback"
+			event.getProjectile().setPickupStatus(PickupStatus.DISALLOWED)
+		else if name of {_i} is "&6Spectral Arrow":
+			set metadata tag "type" of event.getProjectile() to "spectral"
+			event.getProjectile().setPickupStatus(PickupStatus.DISALLOWED)
+		else if name of {_i} is "&3Radius Arrow":
+			set metadata tag "type" of event.getProjectile() to "radius"
+			event.getProjectile().setPickupStatus(PickupStatus.DISALLOWED)
+			set metadata tag "shooter" of event.getProjectile() to event.getEntity()
+
+on projectile hit:
+	if metadata tag "type" of event-projectile is set:
+		set {_type} to metadata tag "type" of event-projectile
+		if {_type} is "radius":
+			set {_shooter} to metadata tag "shooter" of event-projectile
+			loop all players in radius {@Radius Arrow Block Radius} of event-location where [input is not {_shooter}]:
+				push loop-player upwards at speed {@Radius Arrow Upwards Speed}
+
+on projectile collide:
+	if metadata tag "type" of event-projectile is set:
+		set {_type} to metadata tag "type" of event-projectile
+		if {_type} is "knockback":
+			push event-entity backwards at speed {@Knockback Arrow KB Strength}
+		else if {_type} is "spectral":
+			apply glowing to event-entity for 10 seconds
+
+# normal: 8 arrows
+# knockback: 8 arrows named "&7Knockback Arrow"
+# spectral: 8 spectral arrows named "&6Spectral Arrow"
+# radius: 8 arrows named "&3Radius Arrow"
+
+# - Radius arrows
+#   - Loops players in radius 8 around where arrow landed
+# - Speed
+# - Spectral Arrows
+
+# LAUNCHER
+on rightclick with feather:
+	name of event-item is "&9Launcher"
+	if world of player is {TagWorld}:
+		if {timer} is set:
+			play sound "entity.ender_dragon.flap" to player
+			remove 1 of event-item from player's inventory
+			push player forwards at speed {@Launcher Forward Speed}
+			push player upwards at speed {@Launcher Up Speed}
+		else:
+			send "&cYou can only use items once the game has started!"
+	else:
+		cancel event
+		send "&cYou can only use the launcher in the tag world!"
+
+# DOUBLE JUMP
+on jump:
+	player's world is {TagWorld}
+	player's gamemode is not creative
+	if {DoubleJumps::%player's uuid%} > 0:
+		set player's flight state to true
+	else:
+		delete {DoubleJumps::%player's uuid%}
+
+on flight toggle:
+	player's gamemode is not creative
+	player's world is {TagWorld}
+	if {timer} is set:
+		if {DoubleJumps::%player's uuid%} > 0:
+			remove 1 from {DoubleJumps::%player's uuid%}
+			send "&2You used a double jump! &aDouble jumps left: &a&l%{DoubleJumps::%player's uuid%} ? 0%"
+			wait 1 tick
+			set player's flight state to false
+			play sound "entity.ender_dragon.flap" to player
+			push player upwards at speed {@Double-Jump Up}
+			push player forwards at speed {@Double-Jump Forward}
+			if {DoubleJumps::%player's uuid%} <= 0:
+				delete {DoubleJumps::%player's uuid%}
+		else:
+			delete {DoubleJumps::%player's uuid%}
+	else:
+		send "&cYou can only double jump once the game has started!"

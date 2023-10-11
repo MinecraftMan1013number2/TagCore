@@ -1,0 +1,29 @@
+options:
+	Tag Cooldown: 1 second
+
+on damage:
+	if victim is player:
+		if {tagger} is attacker:
+			victim is not attacker
+			if metadata "GottenTaggedRecently" of attacker is set:
+				cancel event
+				send "&cYou need to wait a bit before tagging someone!" to attacker
+			else:
+				setTagger(victim)
+				modifyTeam(victim, "tagger")
+				modifyTeam(attacker, "runner")
+
+				set metadata "GottenTaggedRecently" of victim to true
+				removeArmor(attacker)
+				broadcast "&c%attacker%&c has tagged %victim%&c!" to {TagWorld}
+				send title "&4&lYou have been tagged!" with subtitle "&cTag other people!" to {Tagger} for 2 seconds
+				wait 1 tick
+				heal victim by (final damage) hearts
+				
+				remove 1 from {tokens::%victim's uuid%} if {tokens::%victim's uuid%} > 0
+				add 3 to {tokens::%attacker's uuid%}
+
+				wait {@Tag Cooldown}
+				delete metadata "GottenTaggedRecently" of victim
+		else:
+			cancel event

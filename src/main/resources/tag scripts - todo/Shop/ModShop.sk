@@ -1,0 +1,18 @@
+command /modifiershop:
+	trigger:
+		set {_shop} to a new chest inventory with 5 rows with name "&9&lShop - Modifiers"
+		loop 45 times:
+			set slot (loop-number - 1) of {_shop} to black stained glass pane named "&a"
+		set slots (all integers from 0 to 9), 17, 18, 26, 27, and (all integers from 35 to 44) of {_shop} to orange stained glass pane named "&a"
+		set slot 10 of {_shop} to spectral arrow named "&e&lGlow"
+		set slot 44 of {_shop} to barrier named "&4Back"
+		open {_shop} to player
+
+on inventory click:
+	event-inventory is player's top inventory
+	name of event-inventory is "&9&lShop - Modifiers"
+	cancel event
+	if index of event-slot is 10:
+		buyMod(player, "glow")
+	else if index of event-slot is 44:
+		execute player command "/shop"

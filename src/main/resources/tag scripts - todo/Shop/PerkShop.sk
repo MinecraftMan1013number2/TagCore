@@ -1,0 +1,43 @@
+function openPerksShop(p: player):
+	set {_shop} to a new chest inventory with 5 rows with name "&9&lShop - Perks"
+	# set slot (all integers from 0 to 43) of {_shop} to black stained glass pane named "&a"
+	set slot (all integers from 10 to 34) of {_shop} to black stained glass pane named "&a"
+	set slot (all integers from 0 to 9), 17, 18, 26, 27, and (all integers from 35 to 44) of {_shop} to orange stained glass pane named "&a"
+	set slot 10 of {_shop} to snowball named "&f&lSnowballs (16x)" with lore "", "&fIf you are the seeker, throw these at players to tag them!", "&fIf you are a runner, throw these at the tagger to slow them down!", "", and "&6Cost: $%{shop::perk::snowball}%"
+	set slot 12 of {_shop} to egg named "&f&lEggs (16x)" with lore "", "&fSame as snowballs, but egg", "", and "&6Cost: $%{shop::perk::egg}%"
+	set slot 14 of {_shop} to ender pearl named "&b&lEnderpearls" with lore "", "&bTeleport around!", "", and "&6Cost: $%{shop::perk::enderpearl}%"
+	# set {_speedNBT} to nbt compound from "{Count:1b,id:""minecraft:splash_potion"",tag:{CustomPotionEffects:[{Amplifier:2,Duration:200,Id:1}],Potion:""water""}}"
+	set slot 16 of {_shop} to splash potion of swiftness with potion effects flag hidden named "&9&lSpeed 2" with lore "", "&9Speed away from the tagger if you're a runner!", "&9Speed towards a player if you're the tagger!", "", and "&6Cost: $%{shop::perk::speed}%"
+	# set {_jumpNBT} to nbt compound from "{Count:1b,id:""minecraft:splash_potion"",tag:{CustomPotionEffects:[{Amplifier:1b,Duration:600,Id:8b}],Potion:""minecraft:water""}}"
+	set slot 20 of {_shop} to splash potion of leaping with potion effects flag hidden named "&f&lJump Boost 2" with lore "", "&fJump over the tagger or onto obstacles!", "", and "&6Cost: $%{shop::perk::jump_boost}%"
+	set slot 22 of {_shop} to slime ball named "&a&lDouble Jump" with lore "", "&aJump in mid air!", "", and "&6Cost: $%{shop::perk::double_jump}%"
+	set slot 24 of {_shop} to feather named "&a&lLauncher" with lore "", "&aRight click this item to go flying in the direction you're facing!", "", and "&6Cost: $%{shop::perk::launcher}%"
+	set slot 30 of {_shop} to bow named "<##A65708>&lBow" with lore "", "<##A65708>Shoot people with arrows to tag them!" and "<##A65708>&oComes with 8 Arrows", "", and "&6Cost: $%{shop::perk::bow}%"
+	set slot 32 of {_shop} to arrow named "&7&lArrows" with lore "" and "&7Click to open the arrow shop!"
+	set slot 44 of {_shop} to barrier named "&4Back"
+	open {_shop} to {_p}
+
+on inventory click:
+	event-inventory is player's top inventory
+	name of event-inventory is "&9&lShop - Perks"
+	cancel event
+	if index of event-slot is 10:
+		buyPerk(player, "snowball")
+	if index of event-slot is 12:
+		buyPerk(player, "egg")
+	else if index of event-slot is 14:
+		buyPerk(player, "enderpearl")
+	else if index of event-slot is 16:
+		buyPerk(player, "speed")
+	else if index of event-slot is 20:
+		buyPerk(player, "jump_boost")
+	else if index of event-slot is 22:
+		buyPerk(player, "double_jump")
+	else if index of event-slot is 24:
+		buyPerk(player, "launcher")
+	else if index of event-slot is 30:
+		buyPerk(player, "bow")
+	else if index of event-slot is 32:
+		openArrowShop(player)
+	else if index of event-slot is 44:
+		openShop(player)

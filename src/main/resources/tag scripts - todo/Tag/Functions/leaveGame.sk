@@ -1,0 +1,16 @@
+function leaveGame(p: player):
+	if {players::*} contains {_p}:
+		remove {_p} from {players::*}
+		saveItems({_p})
+		
+		remove {_p} from team entries of (team named "tagger")
+		remove {_p} from team entries of (team named "runner")
+		
+		wait 1 tick
+		execute {_p} command "/spawn"
+		wait 1 tick
+		clear {_p}'s inventory
+		lobbyItems({_p})
+		send "&aYou have left the game." to {_p}
+	else:
+		send "&cYou aren't in the game!" to {_p}

@@ -1,0 +1,7 @@
+function saveItems(p: player):
+	set {_uuid} to {_p}'s uuid
+	set {items::%{_uuid}%::*} to all items in {_p}'s inventory
+
+function giveItems(p: player):
+	set {_uuid} to {_p}'s uuid
+	give {_p} {items::%{_uuid}%::*}

@@ -1,0 +1,13 @@
+command /getvars:
+	permission: op
+	trigger:
+		send formatted "<sgt:{tagger} = %{tagger}%>tagger: %{tagger}%"
+		send formatted "<sgt:{timer} = %{timer}%>timer: %{timer}%"
+		send formatted "<sgt:{queue::*} = %{queue::*}%>queue: %{queue::*}%"
+		send formatted "<sgt:{players::*} = %{players::*}%>players: %{players::*}%"
+		send formatted "<sgt:{CountdownToStart} = %{CountdownToStart}%>CountdownToStart: %{CountdownToStart}%"
+
+command /varandvalue:
+	permission: op
+	trigger:
+		#

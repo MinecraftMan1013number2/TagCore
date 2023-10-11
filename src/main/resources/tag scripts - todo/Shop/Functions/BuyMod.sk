@@ -1,0 +1,11 @@
+options:
+	GlowPrice: 30
+
+function buyMod(p: player, type: text):
+	set {_uuid} to {_p}'s uuid
+	if {_type} is "glow":
+		if {tokens::%{_uuid}%} >= {@GlowPrice}:
+			send "&aBought 1 Glow Charm!" to {_p}
+			remove {@GlowPrice} from {tokens::%{_uuid}%}
+		else:
+			send "&cYou don't have enough tokens to do that!" to {_p}

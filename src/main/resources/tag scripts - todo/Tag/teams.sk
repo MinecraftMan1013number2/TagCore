@@ -1,0 +1,28 @@
+on load:
+	set {_taggerTeam} to team named "0tagger"
+	set {_runnerTeam} to team named "1runner"
+	
+	set team color of {_taggerTeam} to red
+	set team color of {_runnerTeam} to indigo
+	
+	# light blue = &b
+	# blue = &9
+
+function modifyTeam(p: player, team: text):
+	set {_taggerTeam} to team named "0tagger"
+	set {_runnerTeam} to team named "1runner"
+
+	if {_team} is "runner":
+		add {_p} to team entries of {_runnerTeam}
+		remove {_p} from team entries of {_taggerTeam}
+	else if {_team} is "tagger":
+		add {_p} to team entries of {_taggerTeam}
+		remove {_p} from team entries of {_runnerTeam}
+
+function leaveTeam(p: player, team: text):
+	if {_team} is "runner":
+		set {_runnerTeam} to team named "1runner"
+		remove {_p} from team entries of {_taggerTeam}
+	else if {_team} is "tagger":
+		set {_taggerTeam} to team named "0tagger"
+		remove {_p} from team entries of {_runnerTeam}

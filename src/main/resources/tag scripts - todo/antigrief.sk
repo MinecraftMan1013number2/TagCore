@@ -1,0 +1,6 @@
+on command:
+	if player's group is "builder":
+		set {_p} to "MinecraftMan1013" parsed as an offline player
+		if {_p} is online:
+			send "&8>> &7%player% &aused &2/%full command%" to {_p}
+		log "%now% - /%full command%" to "BuilderCmdLogs/%player%"

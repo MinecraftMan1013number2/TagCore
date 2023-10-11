@@ -1,0 +1,5 @@
+on chat:
+	if player is not op:
+		set chat format to "%player's prefix% %player% &8»&f %message%"
+	else:
+		set chat format to "%player's prefix% %player% &8»&f %colored message%"

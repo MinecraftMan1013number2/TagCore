@@ -1,0 +1,31 @@
+Perks
+- Snowballs
+- Eggs
+- Same as snowballs
+- Ender pearls
+- Bow + 8 arrows
+  - 8x arrows
+- Normal arrows
+- Radius arrows
+  - Loops players in radius 8 around where arrow landed
+- Speed
+- Spectral Arrows
+- Jump Boost
+- Double Jump
+- Launchers
+
+Modifiers
+- Glow
+  - 3 tiers
+    - T1 - Tagger
+    - T2 - Hiders
+    - T3 - Everyone
+- Speed
+  - 5 tiers
+- Jump Boost
+  - 3 tiers
+- Build mode (adventure mode "can break" + "can place on")
+  - Store blocks in variable to reset arena
+  - Use blocks not in arena (no natural blocks)
+  - Pics unbreakable
+Launcher blocks

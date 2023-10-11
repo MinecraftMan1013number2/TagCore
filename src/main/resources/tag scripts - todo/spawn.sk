@@ -1,0 +1,32 @@
+command /setspawn:
+	permission: spawn.set
+	permission message: &cYou can't set the spawn!
+	trigger:
+		set {Spawn} to player's location
+		send "&aSet the spawn to %{Spawn}%!"
+
+command /spawn:
+	permission: spawn.go
+	permission message: &cYou don't have permission to go to spawn!
+	trigger:
+		teleport player to {Spawn}
+		send "&6Teleporting..."
+
+on join:
+	if player does not have permission "spawn.bypasstp":
+		wait 1 tick
+		teleport player to {Spawn}
+	else:
+		wait 1 second
+		send "&9-----------------------------"
+		send "&6You have bypassed the spawn TP!"
+		send "&6Do '/spawn' to go back to spawn!"
+		send "&9-----------------------------"
+
+on first join:
+	wait 1 tick
+	teleport player to {Spawn}
+
+on click on sign:
+	if line 3 of event-block contains "spawn":
+		teleport player to {Spawn}

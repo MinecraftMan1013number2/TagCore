@@ -1,0 +1,29 @@
+command /shop:
+#	permission: tag.shop
+#	permission message: &cThe shop is not finished yet! Come back soon!
+	trigger:
+		if world of player is not {TagWorld}:
+			openShop(player)
+		else:
+			send "&cYou cannot open the shop while in the tag world!"
+
+function openShop(p: player):
+	set {_shop} to a new chest inventory with 5 rows with name "&9&lShop - Main"
+	loop 56 times:
+		set slot (loop-number - 1) of {_shop} to black stained glass pane named "&a"
+	set slot (all integers from 0 to 9), 17, 18, 26, 27, and (all integers from 35 to 43) of {_shop} to orange stained glass pane named "&a"
+	set slot 20 of {_shop} to fire charge named "&b&lPerks"
+	set slot 24 of {_shop} to fire charge named "&b&lGame Modifiers" with lore "" and "&e&oComing soon!"
+	set slot 44 of {_shop} to barrier named "&4Close"
+	open {_shop} to {_p}
+
+on inventory click:
+	event-inventory is player's top inventory
+	name of event-inventory is "&9&lShop - Main"
+	cancel event
+	if index of event-slot is 20:
+		openPerksShop(player)
+	# if index of event-slot is 24:
+		# openModifierShop(player)
+	else if index of event-slot is 44:
+		close player's inventory
