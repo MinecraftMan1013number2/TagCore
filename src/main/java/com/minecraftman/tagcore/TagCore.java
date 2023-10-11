@@ -13,7 +13,7 @@ public final class TagCore extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		gameManager = new GameManager();
+		gameManager = new GameManager(this);
 		configManager = new ConfigManager(this);
 		gameComponents = new GameComponents(this);
 		
@@ -25,6 +25,8 @@ public final class TagCore extends JavaPlugin {
 		getCommand("queue").setTabCompleter(baseCommand);
 		
 //		getServer().getPluginManager().registerEvents(new JoinQuit(), this);
+		
+		gameManager.init();
 	}
 	
 	@Override

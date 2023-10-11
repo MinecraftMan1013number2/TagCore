@@ -1,5 +1,6 @@
 package com.minecraftman.tagcore.queue;
 
+import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -22,17 +23,48 @@ public class BaseCommand implements CommandExecutor, TabCompleter {
 				if (QueueManager.removePlayer(player)) {
 					player.sendMessage(Chat.translate("&eYou have left the queue."));
 				} else {
-					if (Bukkit.getOnlinePlayers().size() > 1) {
-						player.sendMessage(Chat.translate("&cYou are not in the queue!"));
-					} else {
-						player.sendMessage(Chat.translate("&cYou are the only player online! Invite someone to play with you!"));
-					}
+					player.sendMessage(Chat.translate("&cYou are not in the queue!"));
 				}
 			} else {
-				if (QueueManager.addPlayer(player)) {
-					player.sendMessage(Chat.translate("&eYou have joined the queue!"));
+				if (Bukkit.getOnlinePlayers().size() > 1) {
+					if (TagCore.getGameManager().getTagger() == null) {
+						if (!QueueManager.getQueue().contains(player)) {
+							/*
+							if {players::*} does not contain {_p}:
+								if {CountdownToStart} is not set:
+									add {_p} to {queue::*}
+									send "&eYou have joined the queue!" to {_p}
+									if size of {queue::*} >= 2:
+										startGame()
+									else:
+										send formatted "<cmd:/queue>&eThere is a player in the queue! Join the queue or click me to play tag with them!" to all players
+								else:
+									# if chaning code below, also change in startGame() below other comment
+									teleport {_p} to spawn of {TagWorld}
+									clear {_p}'s inventory
+							else:
+								send "&cYou are already in the queue!" to {_p}
+							 */
+						} else {
+							player.sendMessage(Chat.translate("&cYou are already in the queue!"));
+						}
+					} else {
+						/*
+						if {players::*} does not contain {_p}:
+							send "&eYou joined the game!" to {_p}
+							teleport {_p} to spawn of {TagWorld}
+							add {_p} to {players::*}
+							broadcast "&2&l%{_p}%&a has joined the tag game!" to {TagWorld}
+							clear {_p}'s inventory
+							wait 1 tick
+							giveItems({_p})
+							modifyTeam({_p}, "runner")
+						else:
+							send "&cYou are already in the game! If this is an error, do /spawn!" to {_p}
+						 */
+					}
 				} else {
-					player.sendMessage(Chat.translate("&cYou are already in the queue!"));
+					player.sendMessage(Chat.translate("&cYou are the only player online! Invite someone to play with you!"));
 				}
 			}
 		} else {

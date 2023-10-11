@@ -4,6 +4,8 @@ import com.minecraftman.tagcore.TagCore;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import java.util.List;
+
 public class ConfigManager {
 	private final TagCore main;
 	public ConfigManager(TagCore main) {
@@ -13,7 +15,12 @@ public class ConfigManager {
 		return Bukkit.getWorld(main.getConfig().getString("tag.TagWorld"));
 	}
 	
+	
 	public int getStartDelay() {
-		return main.getConfig().getInt("tag.StartDelay");
+		return main.getConfig().getInt("tag.StartDelay", 10);
+	}
+	
+	public List<Integer> getGameLength() {
+		return main.getConfig().getIntegerList("tag.GameLength");
 	}
 }
