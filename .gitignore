@@ -2,7 +2,6 @@
 .idea/
 
 *.iml
-!TagCore.iml
 *.ipr
 *.iws
 
