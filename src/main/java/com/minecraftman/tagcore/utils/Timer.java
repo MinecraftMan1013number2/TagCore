@@ -20,6 +20,11 @@ public class Timer {
 		return TimeUnit.MINUTES.convert(ms, TimeUnit.MILLISECONDS) + TimeUnit.SECONDS.convert(ms, TimeUnit.MILLISECONDS)/60.0;
 	}
 	
+	public double getSecondsLeft() {
+		long ms = endDate.getTime() - new Date().getTime();
+		return TimeUnit.MINUTES.convert(ms, TimeUnit.MILLISECONDS);
+	}
+	
 	public String getFormattedTimeRemaining() {
 		long ms = Math.abs(endDate.getTime() - new Date().getTime());
 		return "" + TimeUnit.MINUTES.convert(ms, TimeUnit.MILLISECONDS) + TimeUnit.SECONDS.convert(ms, TimeUnit.MILLISECONDS);

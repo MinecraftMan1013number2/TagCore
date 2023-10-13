@@ -1,19 +1,14 @@
 package com.minecraftman.tagcore.core;
 
 import com.minecraftman.tagcore.TagCore;
-import com.minecraftman.tagcore.core.managers.GameManager;
 import com.minecraftman.tagcore.queue.QueueManager;
 import com.minecraftman.tagcore.utils.Chat;
-import com.minecraftman.tagcore.utils.Timer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class GameComponents {
 	private final TagCore main;
@@ -23,20 +18,11 @@ public class GameComponents {
 	
 	private int cointdownToStart = -1;
 
-	public void startGame(@Nullable Player player) {
+	public void initiateStartCountdown(@Nullable Player player) {
 		if (Bukkit.getOnlinePlayers().size() > 1) {
 			if (QueueManager.getQueueLength() >= 2) {
 				if (cointdownToStart != -1) return;
 				
-				String mesasge = Chat.translate("&aThere are enough people to start! Starting...");
-				Location spawn = TagCore.getConfigManager().getTagWorld().getSpawnLocation();
-				for (Player q : QueueManager.getQueue()) {
-					q.sendMessage(mesasge);
-// if changing code below, also change in joinQueue() -> else statement of 'if {CountdownToStart} is not set'
-					q.teleport(spawn);
-					q.getInventory().clear();
-// end change
-				}
 				cointdownToStart = TagCore.getConfigManager().getStartDelay();
 		        new BukkitRunnable() {
 		            private int i = cointdownToStart;
@@ -44,6 +30,10 @@ public class GameComponents {
 		            @Override
 		            public void run() {
 		                if (i >= 10) {
+			                cointdownToStart = -1;
+							
+			                TagCore.getGameManager().startGame();
+							
 		                    cancel();
 		                    return;
 		                }
@@ -54,16 +44,16 @@ public class GameComponents {
 										"\n§a§lClick this message to join!", i));
 								msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "queue join"));
 								
-								for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-									onlinePlayer.spigot().sendMessage(msg);
-								}
+								Bukkit.getOnlinePlayers().forEach(player ->
+									player.spigot().sendMessage(msg)
+								);
 							}
 						} else {
 							Bukkit.broadcastMessage(Chat.translate("&cThere is only 1 player in the queue! The startup has ended!"));
 							
-							for (Player p : QueueManager.getQueue()) {
-								leaveGame(p);
-							}
+							QueueManager.getQueue().forEach(player ->
+								leaveGame(player)
+							);
 							
 							QueueManager.clearQueue();
 							cancel();
@@ -72,14 +62,6 @@ public class GameComponents {
 			            i++;
 		            }
 		        }.runTaskTimer(main, 20L, 20L);
-				
-				cointdownToStart = -1;
-				
-				List<Integer> time = TagCore.getConfigManager().getGameLength();
-				Timer timer = new Timer(time.get(0), time.get(1));
-// start timer
-				GameManager manager = TagCore.getGameManager();
-				manager.startGame(timer);
 				
 				/*
 				set {players::*} to all players where [world of input is {TagWorld}]
