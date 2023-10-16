@@ -19,6 +19,23 @@ public class PlayerManager {
 	}
 	public void leaveGame(Player player) {
 		players.remove(player);
+		/*
+		if {players::*} contains {_p}:
+			remove {_p} from {players::*}
+			saveItems({_p})
+			
+			remove {_p} from team entries of (team named "tagger")
+			remove {_p} from team entries of (team named "runner")
+			
+			wait 1 tick
+			execute {_p} command "/spawn"
+			wait 1 tick
+			clear {_p}'s inventory
+			lobbyItems({_p})
+			send "&aYou have left the game." to {_p}
+		else:
+			send "&cYou aren't in the game!" to {_p}
+		 */
 	}
 	
 	public void joinGame(Player player, boolean broadcastJoin) {
@@ -51,13 +68,23 @@ public class PlayerManager {
 	
 	public void setTagger(Player player) {
 		tagger = player;
-		/*
-		send title "&4&lYou are the tagger!" with subtitle "&cTag other people!" to {Tagger} for 2 seconds
-		modifyTeam({tagger}, "tagger")
-		 */
+		if (tagger != null) {
+			tagger.sendTitle(Chat.translate("&4&lYou are the tagger!"), Chat.translate("&cTag other people!"), 10, 40, 20);
+		}
+//		modifyTeam({tagger}, "tagger")
 	}
 	
 	public boolean isPlaying(Player player) {
 		return players.contains(player);
+	}
+	
+	public List<Player> getPlayers() {
+		return players;
+	}
+	
+	public void endGame() {
+		players.forEach(this::leaveGame);
+		setTagger(null);
+//		removeArmor({tagger})
 	}
 }

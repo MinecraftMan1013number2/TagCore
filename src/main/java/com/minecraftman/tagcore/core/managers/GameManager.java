@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class GameManager {
 			if (gameRunning) {
 				component = TextComponent.fromLegacyText(Chat.translate("&b&lTime Remaining: &b" + timer.getFormattedTimeRemaining()));
 				if (timer.isFinished()) {
-					endGame();
+					endGame(null);
 					return;
 				}
 				int secsLeft = (int)Math.round(timer.getSecondsLeft());
@@ -89,9 +90,22 @@ public class GameManager {
 		}, 20L*2);
 	}
 	
-	public void endGame() {
-		gameRunning = false;
-		timer = null;
-		//
+	public void endGame(@Nullable Player player) {
+		if (timer != null) {
+			gameRunning = false;
+			timer = null;
+			QueueManager.clearQueue();
+			TagCore.getPlayerManager().endGame();
+			Bukkit.broadcastMessage("");
+			Bukkit.broadcastMessage(Chat.translate("  &eThe tag game has ended!"));
+			Bukkit.broadcastMessage("");
+			if (player != null) {
+				player.sendMessage(Chat.translate("&eYou have ended the game!"));
+			}
+		} else {
+			assert player != null;
+			player.sendMessage(Chat.translate("&cThere is no tag game running!"));
+		}
+		
 	}
 }
