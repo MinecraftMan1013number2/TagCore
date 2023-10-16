@@ -2,6 +2,9 @@ package com.minecraftman.tagcore.queue;
 
 import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.utils.Chat;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,41 +30,33 @@ public class BaseCommand implements CommandExecutor, TabCompleter {
 				}
 			} else {
 				if (Bukkit.getOnlinePlayers().size() > 1) {
-					if (TagCore.getGameManager().getTagger() == null) {
+					if (TagCore.getPlayerManager().getTagger() == null) {
 						if (!QueueManager.getQueue().contains(player)) {
-							/*
-							if {players::*} does not contain {_p}:
-								if {CountdownToStart} is not set:
-									add {_p} to {queue::*}
-									send "&eYou have joined the queue!" to {_p}
-									if size of {queue::*} >= 2:
-										startGame()
-									else:
-										send formatted "<cmd:/queue>&eThere is a player in the queue! Join the queue or click me to play tag with them!" to all players
-								else:
-									# if chaning code below, also change in startGame() below other comment
-									teleport {_p} to spawn of {TagWorld}
-									clear {_p}'s inventory
-							else:
-								send "&cYou are already in the queue!" to {_p}
-							 */
+							if (!TagCore.getGameComponents().countdownStarted()) {
+								QueueManager.addPlayer(player);
+								player.sendMessage(Chat.translate("&eYou have joined the queue!"));
+								if (QueueManager.getQueueLength() >= 2) {
+									TagCore.getGameComponents().initiateStartCountdown();
+								} else {
+									BaseComponent component = new TextComponent(Chat.translate("&eThere is a player in the queue! Join the queue or click me to play tag with them!"));
+									component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "queue"));
+									Bukkit.getOnlinePlayers().forEach(p ->
+										p.spigot().sendMessage(component)
+									);
+								}
+							} else {
+								TagCore.getPlayerManager().joinGame(player, true);
+							}
 						} else {
 							player.sendMessage(Chat.translate("&cYou are already in the queue!"));
 						}
 					} else {
-						/*
-						if {players::*} does not contain {_p}:
-							send "&eYou joined the game!" to {_p}
-							teleport {_p} to spawn of {TagWorld}
-							add {_p} to {players::*}
-							broadcast "&2&l%{_p}%&a has joined the tag game!" to {TagWorld}
-							clear {_p}'s inventory
-							wait 1 tick
-							giveItems({_p})
-							modifyTeam({_p}, "runner")
-						else:
-							send "&cYou are already in the game! If this is an error, do /spawn!" to {_p}
-						 */
+						if (!TagCore.getPlayerManager().isPlaying(player)) {
+							player.sendMessage(Chat.translate("&eYou joined the game!"));
+							TagCore.getPlayerManager().joinGame(player, true);
+						} else {
+							player.sendMessage(Chat.translate("&cYou are already in the game! If this is an error, do /spawn!"));
+						}
 					}
 				} else {
 					player.sendMessage(Chat.translate("&cYou are the only player online! Invite someone to play with you!"));

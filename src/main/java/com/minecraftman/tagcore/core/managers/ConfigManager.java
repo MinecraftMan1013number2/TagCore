@@ -11,10 +11,18 @@ public class ConfigManager {
 	public ConfigManager(TagCore main) {
 		this.main = main;
 	}
-	public World getTagWorld() {
-		return Bukkit.getWorld(main.getConfig().getString("tag.TagWorld"));
+	
+	public void reloadConfig() {
+		main.reloadConfig();
 	}
 	
+	public World getTagWorld() {
+		return Bukkit.getWorld(getTagWorldName());
+	}
+	
+	public String getTagWorldName() {
+		return main.getConfig().getString("tag.TagWorld");
+	}
 	
 	public int getStartDelay() {
 		return main.getConfig().getInt("tag.StartDelay", 10);

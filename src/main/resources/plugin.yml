@@ -11,3 +11,6 @@ commands:
     aliases:
       - q
       - que
+  tag:
+    description: 'The base command for the tag plugin'
+    aliases: [tagcore]

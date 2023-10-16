@@ -6,17 +6,17 @@ import com.minecraftman.tagcore.utils.Chat;
 import com.minecraftman.tagcore.utils.Timer;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
 	private final TagCore main;
 	private static boolean gameRunning;
-	private static List<Player> players;
 	private static int taskID = -1;
 	Timer timer;
 	
@@ -44,7 +44,7 @@ public class GameManager {
 					additionalMsg = new String[]{"", Chat.translate(" &eThere " + grammar + " &6" + timeLeft + "&e left!"), ""};
 				}
 			} else {
-				component = TextComponent.fromLegacyText(Chat.translate("&b&lTime Remaining: &b" + timer.getFormattedTimeRemaining()));
+				component = TextComponent.fromLegacyText(Chat.translate("&bThere is no game running!"));
 			}
 			String[] finalAdditionalMsg = additionalMsg;
 			Bukkit.getOnlinePlayers().forEach(player -> {
@@ -59,29 +59,39 @@ public class GameManager {
 	public void startGame() {
 		if (gameRunning) return;
 		
+		PlayerManager playerManager = TagCore.getPlayerManager();
+		
 		List<Integer> time = TagCore.getConfigManager().getGameLength();
 		Timer timer = new Timer(time.get(0), time.get(1));
-		
-		String mesasge = Chat.translate("&aThere are enough people to start! Starting...");
-		Location spawn = TagCore.getConfigManager().getTagWorld().getSpawnLocation();
 		QueueManager.getQueue().forEach(q -> {
-			q.sendMessage(mesasge);
-// if changing code below, also change in joinQueue() -> else statement of 'if {CountdownToStart} is not set'
-			q.teleport(spawn);
-			q.getInventory().clear();
-// end change
+			q.sendMessage(Chat.translate("&aThere are enough people to start! Starting..."));
+			playerManager.joinGame(q, false);
 		});
 		
 		gameRunning = true;
 		this.timer = timer;
-		players = QueueManager.getQueue();
-		QueueManager.clearQueue();
+		
+		ArrayList<Player> players = QueueManager.getQueue();
+		playerManager.transferPlayers();
+		playerManager.setTagger(players.get((int)(Math.random() * players.size())));
+		Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
+			BaseComponent playersComponent = new TextComponent(Chat.translate("&aThe tagger has been chosen!") + "\n" + Chat.translate("&aThe tagger is &a&l" + TagCore.getPlayerManager().getTagger().getName() +"&a!"));
+			BaseComponent publicComponent = new TextComponent(Chat.translate("&aThe tag game has started! Join the queue with \"/queue\" or click me to join!"));
+			publicComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "queue"));
+			
+			Bukkit.getOnlinePlayers().forEach((player -> {
+				if (playerManager.isPlaying(player)) {
+					player.spigot().sendMessage(playersComponent);
+				} else {
+					player.spigot().sendMessage(publicComponent);
+				}
+			}));
+		}, 20L*2);
 	}
 	
 	public void endGame() {
 		gameRunning = false;
 		timer = null;
-		
+		//
 	}
-	
 }

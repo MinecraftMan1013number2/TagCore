@@ -1,4 +1,4 @@
-package com.minecraftman.tagcore.core;
+package com.minecraftman.tagcore.core.managers;
 
 import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.queue.QueueManager;
@@ -10,14 +10,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 
-public class GameComponents {
+public class PreGameManager {
 	private final TagCore main;
-	public GameComponents(TagCore main) {
+	public PreGameManager(TagCore main) {
 		this.main = main;
 	}
 	
 	private int cointdownToStart = -1;
-
+	
+	public boolean countdownStarted() {
+		return (cointdownToStart > -1);
+	}
+	
+	public void initiateStartCountdown() {initiateStartCountdown(null);}
 	public void initiateStartCountdown(@Nullable Player player) {
 		if (Bukkit.getOnlinePlayers().size() > 1) {
 			if (QueueManager.getQueueLength() >= 2) {
@@ -52,7 +57,8 @@ public class GameComponents {
 							Bukkit.broadcastMessage(Chat.translate("&cThere is only 1 player in the queue! The startup has ended!"));
 							
 							QueueManager.getQueue().forEach(player ->
-								leaveGame(player)
+								// not in game, so why leave?
+								TagCore.getPlayerManager().leaveGame(player)
 							);
 							
 							QueueManager.clearQueue();
@@ -62,31 +68,11 @@ public class GameComponents {
 			            i++;
 		            }
 		        }.runTaskTimer(main, 20L, 20L);
-				
-				/*
-				set {players::*} to all players where [world of input is {TagWorld}]
-				set {tagger} to a random element out of {players::*}
-				delete {queue::*}
-				setTagger({tagger})
-				send title "&4&lYou are the tagger!" with subtitle "&cTag other people!" to {Tagger} for 2 seconds
-				modifyTeam({tagger}, "tagger")
-				giveItems({tagger})
-				loop {players::*} where [input != {tagger}]:
-					modifyTeam(loop-value, "runner")
-					giveItems(loop-value)
-				broadcast "&aThe tagger has been chosen!" to {TagWorld}
-				broadcast "&aThe tagger is &a&l%{tagger}%&a!" to {TagWorld}
-				send formatted "<cmd:/queue>&aThe tag game has started! Join the queue with ""/queue"" or click me to join!" to all players where [input's world is not {TagWorld}]
-				 */
 			} else {
 				if (player != null) player.sendMessage(Chat.translate("&dYou are the only one in the queue! Invite someone else to join you!"));
 			}
 		} else {
 			if (player != null) player.sendMessage(Chat.translate(""));
 		}
-	}
-	
-	public void leaveGame(Player player) {
-	
 	}
 }

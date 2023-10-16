@@ -1,21 +1,21 @@
 package com.minecraftman.tagcore;
 
-import com.minecraftman.tagcore.core.managers.ConfigManager;
-import com.minecraftman.tagcore.core.GameComponents;
-import com.minecraftman.tagcore.core.managers.GameManager;
+import com.minecraftman.tagcore.core.managers.*;
 import com.minecraftman.tagcore.queue.BaseCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TagCore extends JavaPlugin {
 	private static GameManager gameManager;
 	private static ConfigManager configManager;
-	private static GameComponents gameComponents;
+	private static PreGameManager preGameManager;
+	private static PlayerManager playerManager;
 	
 	@Override
 	public void onEnable() {
-		gameManager = new GameManager(this);
 		configManager = new ConfigManager(this);
-		gameComponents = new GameComponents(this);
+		playerManager = new PlayerManager(this);
+		preGameManager = new PreGameManager(this);
+		gameManager = new GameManager(this);
 		
 		getConfig().options().copyDefaults();
 		saveDefaultConfig();
@@ -24,7 +24,7 @@ public final class TagCore extends JavaPlugin {
 		getCommand("queue").setExecutor(baseCommand);
 		getCommand("queue").setTabCompleter(baseCommand);
 		
-//		getServer().getPluginManager().registerEvents(new JoinQuit(), this);
+		getCommand("tag").setExecutor(new TagCommand(this));
 		
 		gameManager.init();
 	}
@@ -42,7 +42,11 @@ public final class TagCore extends JavaPlugin {
 		return configManager;
 	}
 	
-	public static GameComponents getGameComponents() {
-		return gameComponents;
+	public static PreGameManager getGameComponents() {
+		return preGameManager;
+	}
+	
+	public static PlayerManager getPlayerManager() {
+		return playerManager;
 	}
 }
