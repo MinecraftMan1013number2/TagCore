@@ -1,7 +1,6 @@
 package com.minecraftman.tagcore.core.managers;
 
 import com.minecraftman.tagcore.TagCore;
-import com.minecraftman.tagcore.queue.QueueManager;
 import com.minecraftman.tagcore.utils.Chat;
 import com.minecraftman.tagcore.utils.Timer;
 import net.md_5.bungee.api.ChatMessageType;
@@ -17,19 +16,14 @@ import java.util.List;
 
 public class GameManager {
 	private final TagCore main;
-	private static boolean gameRunning;
-	private static int taskID = -1;
-	Timer timer;
+	private boolean gameRunning = false;
+	Timer timer = null;
 	
 	public GameManager(TagCore main) {
 		this.main = main;
-		this.timer = null;
-	}
-	
-	public void init() {
-		if (taskID != -1) return;
 		
-		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
+		// Initiate periodical for action bar + timer
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
 			BaseComponent[] component;
 			String[] additionalMsg = null;
 			if (gameRunning) {
@@ -38,10 +32,13 @@ public class GameManager {
 					endGame(null);
 					return;
 				}
-				int secsLeft = (int)Math.round(timer.getSecondsLeft());
-				if (secsLeft % 60 == 0 || secsLeft == 30 || secsLeft == 15 || secsLeft == 10 || secsLeft == 5) {
-					String timeLeft = secsLeft + " seconds";
-					String grammar = (timeLeft.startsWith("1 m") || timeLeft.startsWith("1 s") ? "is" : "are");
+				long secs = timer.getSecondsLeft();
+				long mins = timer.getMinutesLeft();
+				if (secs % 60 == 0 || (mins == 0 && (secs == 30 || secs == 15 || secs == 10 || secs <= 5))) {
+					String minsLeft = mins + " minute" + ((mins == 1) ? "s" : "");
+					String secsLeft = secs + " seconds";
+					String timeLeft = minsLeft + ((secs != 0) ? " " + secsLeft : "");
+					String grammar = (timeLeft.startsWith("1 m") ? "is" : "are");
 					additionalMsg = new String[]{"", Chat.translate(" &eThere " + grammar + " &6" + timeLeft + "&e left!"), ""};
 				}
 			} else {
@@ -64,7 +61,7 @@ public class GameManager {
 		
 		List<Integer> time = TagCore.getConfigManager().getGameLength();
 		Timer timer = new Timer(time.get(0), time.get(1));
-		QueueManager.getQueue().forEach(q -> {
+		TagCore.getQueueManager().getQueue().forEach(q -> {
 			q.sendMessage(Chat.translate("&aThere are enough people to start! Starting..."));
 			playerManager.joinGame(q, false);
 		});
@@ -72,7 +69,7 @@ public class GameManager {
 		gameRunning = true;
 		this.timer = timer;
 		
-		ArrayList<Player> players = QueueManager.getQueue();
+		ArrayList<Player> players = TagCore.getQueueManager().getQueue();
 		playerManager.transferPlayers();
 		playerManager.setTagger(players.get((int)(Math.random() * players.size())));
 		Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
@@ -94,7 +91,7 @@ public class GameManager {
 		if (timer != null) {
 			gameRunning = false;
 			timer = null;
-			QueueManager.clearQueue();
+			TagCore.getQueueManager().clearQueue();
 			TagCore.getPlayerManager().endGame();
 			Bukkit.broadcastMessage("");
 			Bukkit.broadcastMessage(Chat.translate("  &eThe tag game has ended!"));
@@ -106,6 +103,5 @@ public class GameManager {
 			assert player != null;
 			player.sendMessage(Chat.translate("&cThere is no tag game running!"));
 		}
-		
 	}
 }

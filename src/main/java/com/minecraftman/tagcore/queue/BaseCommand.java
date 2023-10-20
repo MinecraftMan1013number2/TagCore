@@ -23,7 +23,7 @@ public class BaseCommand implements CommandExecutor, TabCompleter {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (args.length >= 1 && args[0].equals("leave")) {
-				if (QueueManager.removePlayer(player)) {
+				if (TagCore.getQueueManager().removePlayer(player)) {
 					player.sendMessage(Chat.translate("&eYou have left the queue."));
 				} else {
 					player.sendMessage(Chat.translate("&cYou are not in the queue!"));
@@ -31,11 +31,12 @@ public class BaseCommand implements CommandExecutor, TabCompleter {
 			} else {
 				if (Bukkit.getOnlinePlayers().size() > 1) {
 					if (TagCore.getPlayerManager().getTagger() == null) {
-						if (!QueueManager.getQueue().contains(player)) {
+						QueueManager queueManager = TagCore.getQueueManager();
+						if (!queueManager.getQueue().contains(player)) {
 							if (!TagCore.getGameComponents().countdownStarted()) {
-								QueueManager.addPlayer(player);
+								queueManager.addPlayer(player);
 								player.sendMessage(Chat.translate("&eYou have joined the queue!"));
-								if (QueueManager.getQueueLength() >= 2) {
+								if (queueManager.getQueueLength() >= 2) {
 									TagCore.getGameComponents().initiateStartCountdown();
 								} else {
 									BaseComponent component = new TextComponent(Chat.translate("&eThere is a player in the queue! Join the queue or click me to play tag with them!"));

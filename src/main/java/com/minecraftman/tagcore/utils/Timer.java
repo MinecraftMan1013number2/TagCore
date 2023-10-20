@@ -10,27 +10,29 @@ public class Timer {
 		this(seconds, 0);
 	}
 	public Timer(int seconds, int minutes) {
-		int ms = seconds*1000 + minutes*60000;
+		// 4ms needs to be added to get an accurate formatted time for some reason
+		// im guessing it's execution time, but idk
+		int ms = seconds*1000 + minutes*60000 + 4;
 		endDate = new Date();
 		endDate.setTime(endDate.getTime() + ms);
 	}
 	
-	public double getMinutesLeft() {
-		long ms = Math.abs(endDate.getTime() - new Date().getTime());
-		return TimeUnit.MINUTES.convert(ms, TimeUnit.MILLISECONDS) + TimeUnit.SECONDS.convert(ms, TimeUnit.MILLISECONDS)/60.0;
-	}
-	
-	public double getSecondsLeft() {
+	public long getMinutesLeft() {
 		long ms = endDate.getTime() - new Date().getTime();
 		return TimeUnit.MINUTES.convert(ms, TimeUnit.MILLISECONDS);
 	}
 	
+	public long getSecondsLeft() {
+		long ms = endDate.getTime() - new Date().getTime();
+		return TimeUnit.SECONDS.convert(ms, TimeUnit.MILLISECONDS);
+	}
+	
 	public String getFormattedTimeRemaining() {
-		long ms = Math.abs(endDate.getTime() - new Date().getTime());
-		return "" + TimeUnit.MINUTES.convert(ms, TimeUnit.MILLISECONDS) + TimeUnit.SECONDS.convert(ms, TimeUnit.MILLISECONDS);
+		long s = getSecondsLeft() % 60;
+		return getMinutesLeft() + ":" + (s < 10 ? "0" : "") + s;
 	}
 	
 	public boolean isFinished() {
-		return (endDate.getTime() - new Date().getTime()) > 0;
+		return (endDate.getTime() - new Date().getTime()) <= 0;
 	}
 }

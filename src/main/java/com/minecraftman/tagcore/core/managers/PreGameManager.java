@@ -25,7 +25,7 @@ public class PreGameManager {
 	public void initiateStartCountdown() {initiateStartCountdown(null);}
 	public void initiateStartCountdown(@Nullable Player player) {
 		if (Bukkit.getOnlinePlayers().size() > 1) {
-			if (QueueManager.getQueueLength() >= 2) {
+			if (TagCore.getQueueManager().getQueueLength() >= 2) {
 				if (cointdownToStart != -1) return;
 				
 				cointdownToStart = TagCore.getConfigManager().getStartDelay();
@@ -43,7 +43,8 @@ public class PreGameManager {
 		                    return;
 		                }
 				
-						if (QueueManager.getQueueLength() > 1) {
+						QueueManager queueManager = TagCore.getQueueManager();
+						if (queueManager.getQueueLength() > 1) {
 							if (i % 10 == 0) {
 								TextComponent msg = new TextComponent(String.format("§a§lThe tag game will be starting in %s seconds!" +
 										"\n§a§lClick this message to join!", i));
@@ -56,12 +57,12 @@ public class PreGameManager {
 						} else {
 							Bukkit.broadcastMessage(Chat.translate("&cThere is only 1 player in the queue! The startup has ended!"));
 							
-							QueueManager.getQueue().forEach(player ->
+							queueManager.getQueue().forEach(player ->
 								// not in game, so why leave?
 								TagCore.getPlayerManager().leaveGame(player)
 							);
 							
-							QueueManager.clearQueue();
+							queueManager.clearQueue();
 							cancel();
 						}
 			            

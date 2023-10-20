@@ -1,10 +1,10 @@
 on load:
 	set {_taggerTeam} to team named "0tagger"
 	set {_runnerTeam} to team named "1runner"
-	
+
 	set team color of {_taggerTeam} to red
 	set team color of {_runnerTeam} to indigo
-	
+
 	# light blue = &b
 	# blue = &9
 

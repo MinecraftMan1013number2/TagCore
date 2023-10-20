@@ -1,18 +1,25 @@
 package com.minecraftman.tagcore.queue;
 
+import com.minecraftman.tagcore.TagCore;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
 public class QueueManager {
-	private static final ArrayList<Player> queue = new ArrayList<>();
+	TagCore main;
 	
-	public static ArrayList<Player> getQueue() {
+	private final ArrayList<Player> queue = new ArrayList<>();
+	
+	public ArrayList<Player> getQueue() {
 		return queue;
 	}
 	
-	public static boolean addPlayer(Player player) {
+	public QueueManager(TagCore main) {
+		this.main = main;
+	}
+	
+	public boolean addPlayer(Player player) {
 		if (!isInQueue(player)) {
 			if (Bukkit.getOnlinePlayers().size() > 1) {
 				queue.add(player);
@@ -23,7 +30,7 @@ public class QueueManager {
 	}
 	
 	/*
-	public static boolean insertPlayer(Player player, int pos) {
+	public boolean insertPlayer(Player player, int pos) {
 		if (!isInQueue(player)) {
 			if (Bukkit.getOnlinePlayers().size() > 1) {
 				queue.add(pos, player);
@@ -34,30 +41,19 @@ public class QueueManager {
 	}
 	 */
 	
-	public static boolean removePlayer(Player player) {
-		if (isInQueue(player)) {
-			queue.remove(player);
-			return true;
-		}
-		return false;
+	public boolean removePlayer(Player player) {
+		return queue.remove(player);
 	}
 	
-	public static boolean isInQueue(Player player) {
+	public boolean isInQueue(Player player) {
 		return queue.contains(player);
 	}
 	
-	public static int getQueuePosition(Player player) {
-		if (isInQueue(player)) {
-			return queue.indexOf(player) + 1;
-		}
-		return -1;
-	}
-	
-	public static int getQueueLength() {
+	public int getQueueLength() {
 		return queue.size();
 	}
 	
-	public static void clearQueue() {
+	public void clearQueue() {
 			queue.clear();
 		}
 }

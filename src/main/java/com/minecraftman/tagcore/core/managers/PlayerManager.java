@@ -1,8 +1,8 @@
 package com.minecraftman.tagcore.core.managers;
 
 import com.minecraftman.tagcore.TagCore;
-import com.minecraftman.tagcore.queue.QueueManager;
 import com.minecraftman.tagcore.utils.Chat;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -18,24 +18,25 @@ public class PlayerManager {
 		this.players = new ArrayList<>();
 	}
 	public void leaveGame(Player player) {
-		players.remove(player);
-		/*
-		if {players::*} contains {_p}:
-			remove {_p} from {players::*}
+		if (players.contains(player)) {
+			players.remove(player);
+			/*
 			saveItems({_p})
-			
 			remove {_p} from team entries of (team named "tagger")
 			remove {_p} from team entries of (team named "runner")
+			 */
 			
-			wait 1 tick
-			execute {_p} command "/spawn"
-			wait 1 tick
-			clear {_p}'s inventory
-			lobbyItems({_p})
-			send "&aYou have left the game." to {_p}
-		else:
-			send "&cYou aren't in the game!" to {_p}
-		 */
+			Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
+				Bukkit.getServer().dispatchCommand(player, "spawn");
+				Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
+					player.getInventory().clear();
+//					lobbyItems({_p})
+					player.sendMessage(Chat.translate("&aYou have left the game."));
+				}, 20L);
+			}, 20L);
+		} else {
+			player.sendMessage(Chat.translate("&cYou aren't in the game!"));
+		}
 	}
 	
 	public void joinGame(Player player, boolean broadcastJoin) {
@@ -57,8 +58,8 @@ public class PlayerManager {
 	
 	public void transferPlayers() {
 		if (!players.isEmpty()) {
-			players.addAll(QueueManager.getQueue());
-			QueueManager.clearQueue();
+			players.addAll(TagCore.getQueueManager().getQueue());
+			TagCore.getQueueManager().clearQueue();
 		}
 	}
 	
@@ -78,9 +79,9 @@ public class PlayerManager {
 		return players.contains(player);
 	}
 	
-	public List<Player> getPlayers() {
-		return players;
-	}
+//	public List<Player> getPlayers() {
+//		return players;
+//	}
 	
 	public void endGame() {
 		players.forEach(this::leaveGame);

@@ -1,10 +1,3 @@
-options:
-	Game Time Notification Rule 1: mod({timer}, 60) = 0
-	Game Time Notification Rule 2: {timer} = 30
-	Game Time Notification Rule 3: {timer} = 15
-	Game Time Notification Rule 4: {timer} = 10
-	Game Time Notification Rule 5: {timer} = 5
-
 every second:
 	if {tagger} is set:
 		remove 1 from {timer}

@@ -1,6 +1,5 @@
-package com.minecraftman.tagcore.core.managers;
+package com.minecraftman.tagcore;
 
-import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.utils.Chat;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
