@@ -2,7 +2,7 @@
 Tag:
   # World for tag arena
   TagWorld: 'Tag'
-  # How long after enough people join the queue until the game starts
+  # How long after enough people join the queue until the game starts (seconds)
   StartDelay: 30
   # How long is the game (minutes, seconds). Default is 5 mins 0 secs
   GameLength:

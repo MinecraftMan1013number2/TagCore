@@ -6,13 +6,10 @@ import java.util.concurrent.TimeUnit;
 public class Timer {
 	private final Date endDate;
 	
-	public Timer(int seconds) {
-		this(seconds, 0);
-	}
-	public Timer(int seconds, int minutes) {
+	public Timer(int minutes, int seconds) {
 		// 4ms needs to be added to get an accurate formatted time for some reason
 		// im guessing it's execution time, but idk
-		int ms = seconds*1000 + minutes*60000 + 4;
+		int ms = minutes*60000 + (seconds+1)*1000;
 		endDate = new Date();
 		endDate.setTime(endDate.getTime() + ms);
 	}
@@ -33,6 +30,6 @@ public class Timer {
 	}
 	
 	public boolean isFinished() {
-		return (endDate.getTime() - new Date().getTime()) <= 0;
+		return (endDate.getTime() - new Date().getTime()) < 1000;
 	}
 }

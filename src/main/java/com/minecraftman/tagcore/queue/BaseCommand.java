@@ -37,10 +37,10 @@ public class BaseCommand implements CommandExecutor, TabCompleter {
 								queueManager.addPlayer(player);
 								player.sendMessage(Chat.translate("&eYou have joined the queue!"));
 								if (queueManager.getQueueLength() >= 2) {
-									TagCore.getGameComponents().initiateStartCountdown();
+									TagCore.getGameComponents().initiateStartCountdown(null);
 								} else {
 									BaseComponent component = new TextComponent(Chat.translate("&eThere is a player in the queue! Join the queue or click me to play tag with them!"));
-									component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "queue"));
+									component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/queue"));
 									Bukkit.getOnlinePlayers().forEach(p ->
 										p.spigot().sendMessage(component)
 									);

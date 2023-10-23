@@ -1,6 +1,11 @@
 package com.minecraftman.tagcore;
 
-import com.minecraftman.tagcore.core.managers.*;
+import com.minecraftman.tagcore.core.Lobby;
+import com.minecraftman.tagcore.core.events.JoinQuit;
+import com.minecraftman.tagcore.core.managers.ConfigManager;
+import com.minecraftman.tagcore.core.managers.GameManager;
+import com.minecraftman.tagcore.core.managers.PlayerManager;
+import com.minecraftman.tagcore.core.managers.PreGameManager;
 import com.minecraftman.tagcore.queue.BaseCommand;
 import com.minecraftman.tagcore.queue.QueueManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,6 +33,10 @@ public final class TagCore extends JavaPlugin {
 		getCommand("queue").setTabCompleter(baseCommand);
 		
 		getCommand("tag").setExecutor(new TagCommand(this));
+		
+		getServer().getPluginManager().registerEvents(new Lobby(), this);
+		getServer().getPluginManager().registerEvents(new JoinQuit(), this);
+		
 	}
 	
 	@Override

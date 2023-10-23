@@ -22,7 +22,6 @@ public class PreGameManager {
 		return (cointdownToStart > -1);
 	}
 	
-	public void initiateStartCountdown() {initiateStartCountdown(null);}
 	public void initiateStartCountdown(@Nullable Player player) {
 		if (Bukkit.getOnlinePlayers().size() > 1) {
 			if (TagCore.getQueueManager().getQueueLength() >= 2) {
@@ -30,11 +29,10 @@ public class PreGameManager {
 				
 				cointdownToStart = TagCore.getConfigManager().getStartDelay();
 		        new BukkitRunnable() {
-		            private int i = cointdownToStart;
-		    
 		            @Override
 		            public void run() {
-		                if (i >= 10) {
+		                if (cointdownToStart <= 0) {
+							Bukkit.broadcastMessage("starting game");
 			                cointdownToStart = -1;
 							
 			                TagCore.getGameManager().startGame();
@@ -42,13 +40,14 @@ public class PreGameManager {
 		                    cancel();
 		                    return;
 		                }
-				
+						
+						Bukkit.broadcastMessage("called");
 						QueueManager queueManager = TagCore.getQueueManager();
 						if (queueManager.getQueueLength() > 1) {
-							if (i % 10 == 0) {
+							if (cointdownToStart % 10 == 0) {
 								TextComponent msg = new TextComponent(String.format("§a§lThe tag game will be starting in %s seconds!" +
-										"\n§a§lClick this message to join!", i));
-								msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "queue join"));
+										"\n§a§lClick this message to join!", cointdownToStart));
+								msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/queue"));
 								
 								Bukkit.getOnlinePlayers().forEach(player ->
 									player.spigot().sendMessage(msg)
@@ -57,16 +56,13 @@ public class PreGameManager {
 						} else {
 							Bukkit.broadcastMessage(Chat.translate("&cThere is only 1 player in the queue! The startup has ended!"));
 							
-							queueManager.getQueue().forEach(player ->
-								// not in game, so why leave?
-								TagCore.getPlayerManager().leaveGame(player)
-							);
-							
+							cointdownToStart = -1;
 							queueManager.clearQueue();
 							cancel();
+							return;
 						}
-			            
-			            i++;
+			   
+						cointdownToStart--;
 		            }
 		        }.runTaskTimer(main, 20L, 20L);
 			} else {

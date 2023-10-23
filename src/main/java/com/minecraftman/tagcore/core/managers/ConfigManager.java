@@ -21,14 +21,14 @@ public class ConfigManager {
 	}
 	
 	public String getTagWorldName() {
-		return main.getConfig().getString("tag.TagWorld");
+		return main.getConfig().getString("Tag.TagWorld");
 	}
 	
 	public int getStartDelay() {
-		return main.getConfig().getInt("tag.StartDelay", 10);
+		return main.getConfig().getInt("Tag.StartDelay", 60);
 	}
 	
 	public List<Integer> getGameLength() {
-		return main.getConfig().getIntegerList("tag.GameLength");
+		return main.getConfig().getIntegerList("Tag.GameLength");
 	}
 }

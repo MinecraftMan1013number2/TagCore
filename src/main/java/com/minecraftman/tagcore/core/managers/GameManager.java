@@ -32,14 +32,15 @@ public class GameManager {
 					endGame(null);
 					return;
 				}
-				long secs = timer.getSecondsLeft();
+				long secs = timer.getSecondsLeft()%60;
 				long mins = timer.getMinutesLeft();
-				if (secs % 60 == 0 || (mins == 0 && (secs == 30 || secs == 15 || secs == 10 || secs <= 5))) {
-					String minsLeft = mins + " minute" + ((mins == 1) ? "s" : "");
-					String secsLeft = secs + " seconds";
-					String timeLeft = minsLeft + ((secs != 0) ? " " + secsLeft : "");
-					String grammar = (timeLeft.startsWith("1 m") ? "is" : "are");
-					additionalMsg = new String[]{"", Chat.translate(" &eThere " + grammar + " &6" + timeLeft + "&e left!"), ""};
+				if (mins+secs != 0 && secs == 0 || (mins == 0 && (secs == 30 || secs == 15 || secs == 10 || secs <= 5))) {
+					String minsLeft = (mins != 0) ? ((mins + " minute") + ((mins == 1) ? "" : "s")) : "";
+					String secsLeft = (secs != 0) ? ((secs + " second") + ((secs == 1) ? "" : "s")) : "";
+					String timeLeft = minsLeft + secsLeft;
+					String grammar = (timeLeft.startsWith("1 ") ? "is" : "are");
+//					if (!timeLeft.isEmpty())
+						additionalMsg = new String[]{"", Chat.translate(" &eThere " + grammar + " &6" + timeLeft + "&e left!"), ""};
 				}
 			} else {
 				component = TextComponent.fromLegacyText(Chat.translate("&bThere is no game running!"));
@@ -71,20 +72,19 @@ public class GameManager {
 		
 		ArrayList<Player> players = TagCore.getQueueManager().getQueue();
 		playerManager.transferPlayers();
-		playerManager.setTagger(players.get((int)(Math.random() * players.size())));
-		Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
-			BaseComponent playersComponent = new TextComponent(Chat.translate("&aThe tagger has been chosen!") + "\n" + Chat.translate("&aThe tagger is &a&l" + TagCore.getPlayerManager().getTagger().getName() +"&a!"));
-			BaseComponent publicComponent = new TextComponent(Chat.translate("&aThe tag game has started! Join the queue with \"/queue\" or click me to join!"));
-			publicComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "queue"));
-			
-			Bukkit.getOnlinePlayers().forEach((player -> {
-				if (playerManager.isPlaying(player)) {
-					player.spigot().sendMessage(playersComponent);
-				} else {
-					player.spigot().sendMessage(publicComponent);
-				}
-			}));
-		}, 20L*2);
+		playerManager.setTagger(players.get((int)(Math.random() * players.size())), null);
+		BaseComponent playersComponent = new TextComponent(Chat.translate("&aThe tagger has been chosen!") + "\n" + Chat.translate("&aThe tagger is &a&l" + TagCore.getPlayerManager().getTagger().getName() +"&a!"));
+		BaseComponent publicComponent = new TextComponent(Chat.translate("&aThe tag game has started! Join the queue with \"/queue\" or click me to join!"));
+		publicComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/queue"));
+		
+		Bukkit.getOnlinePlayers().forEach((player -> {
+			if (playerManager.isPlaying(player)) {
+				player.spigot().sendMessage(playersComponent);
+			} else {
+				player.spigot().sendMessage(publicComponent);
+			}
+			player.sendMessage(Chat.translate("&eThe game will last for &6" + timer.getMinutesLeft() + " minutes and " + timer.getSecondsLeft()%60 + " seconds&e."));
+		}));
 	}
 	
 	public void endGame(@Nullable Player player) {

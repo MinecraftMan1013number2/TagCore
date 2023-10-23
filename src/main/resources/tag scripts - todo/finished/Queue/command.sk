@@ -1,0 +1,11 @@
+command /queue [<text>]:
+	aliases: que, q
+	trigger:
+		if arg-1 is "leave":
+			if {queue::*} contains player:
+				remove player from {queue::*}
+				send "&aYou left the queue."
+			else:
+				send "&cYou are not in the queue!"
+		else:
+			joinQueue(player)
