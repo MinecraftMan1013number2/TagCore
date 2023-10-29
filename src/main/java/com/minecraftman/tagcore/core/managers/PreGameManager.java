@@ -32,7 +32,6 @@ public class PreGameManager {
 		            @Override
 		            public void run() {
 		                if (cointdownToStart <= 0) {
-							Bukkit.broadcastMessage("starting game");
 			                cointdownToStart = -1;
 							
 			                TagCore.getGameManager().startGame();
@@ -41,7 +40,6 @@ public class PreGameManager {
 		                    return;
 		                }
 						
-						Bukkit.broadcastMessage("called");
 						QueueManager queueManager = TagCore.getQueueManager();
 						if (queueManager.getQueueLength() > 1) {
 							if (cointdownToStart % 10 == 0) {

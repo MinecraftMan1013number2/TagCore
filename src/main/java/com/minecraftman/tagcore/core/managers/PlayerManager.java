@@ -9,16 +9,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PlayerManager {
-	private final TagCore main;
+//	private final TagCore main;
 	private final List<Player> players;
 	private Player tagger;
 	private final TeamManager teamManager;
 	
 	public PlayerManager(TagCore main) {
-		this.main = main;
+//		this.main = main;
 		this.players = new ArrayList<>();
 		this.teamManager = new TeamManager();
 	}
@@ -27,23 +28,19 @@ public class PlayerManager {
 		return teamManager;
 	}
 	
-	public void leaveGame(Player player) {
-		leaveGame(player, true);
-	}
 	public void leaveGame(Player player, boolean sendMsg) {
 		if (players.contains(player)) {
 			players.remove(player);
 //			saveItems({_p})
 			teamManager.removeTeam(player);
-			
-			Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
-				Bukkit.getServer().dispatchCommand(player, "spawn");
-				Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
-					player.getInventory().clear();
-					Lobby.setLobbyInventory(player);
-					player.sendMessage(Chat.translate("&aYou have left the game."));
-				}, 1L);
-			}, 1L);
+
+			Bukkit.getServer().dispatchCommand(player, "say spawn cmd");
+			Bukkit.broadcastMessage(player.getName() + "ticked");
+			player.getInventory().clear();
+			Bukkit.broadcastMessage(player.getName() + "inv cleared");
+			Lobby.setLobbyInventory(player);
+			Bukkit.broadcastMessage(player.getName() + "inv set lobby");
+			player.sendMessage(Chat.translate("&aYou have left the game."));
 		} else {
 			if (sendMsg) player.sendMessage(Chat.translate("&cYou aren't in the game!"));
 		}
@@ -92,8 +89,8 @@ public class PlayerManager {
 			armor[1] = TagArmor.getTaggerLeggings();
 			armor[0] = TagArmor.getTaggerBoots();
 			tagger.getInventory().setArmorContents(armor);
+			TagCore.getPlayerManager().getTeamManager().setTeam(tagger, TeamManager.TagTeam.TAGGER);
 		}
-		TagCore.getPlayerManager().getTeamManager().setTeam(tagger, TeamManager.TagTeam.TAGGER);
 	}
 	
 	public boolean isPlaying(Player player) {
@@ -104,8 +101,19 @@ public class PlayerManager {
 //		return players;
 //	}
 	
-	public void endGame() {
-		players.forEach(this::leaveGame);
+	public void flush() {
 		setTagger(null, tagger);
+		Iterator<Player> iterator = players.iterator();
+		while (iterator.hasNext()) {
+			Player player = iterator.next();
+			iterator.remove();
+//			saveItems({_p})
+			teamManager.removeTeam(player);
+			
+			Bukkit.getServer().dispatchCommand(player, "spawn");
+			player.getInventory().clear();
+			Lobby.setLobbyInventory(player);
+			player.sendMessage(Chat.translate("&aYou have left the game."));
+		}
 	}
 }
