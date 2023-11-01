@@ -30,7 +30,7 @@ public class JoinQuit implements Listener {
 		Player player = event.getPlayer();
 		event.setQuitMessage(Chat.translate("&8[&c-&8]&7 " + player.getName()));
 		TagCore.getQueueManager().removePlayer(player);
-		TagCore.getPlayerManager().leaveGame(player, false);
+		TagCore.getPlayerManager().leaveGame(true, player);
 		
 		/*
 		if {Tagger} is player:

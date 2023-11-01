@@ -20,7 +20,7 @@ public class TagCommand implements CommandExecutor {
 					TagCore.getQueueManager().addPlayer(player);
 					return true;
 				} else if (args[0].equals("leave")) {
-					TagCore.getPlayerManager().leaveGame(player, true);
+					TagCore.getPlayerManager().leaveGame(true, player);
 					return true;
 				}
 			} else {

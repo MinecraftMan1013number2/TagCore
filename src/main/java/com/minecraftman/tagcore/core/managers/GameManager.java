@@ -16,13 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
-	private final TagCore main;
 	private boolean gameRunning = false;
 	Timer timer = null;
 	
 	public GameManager(TagCore main) {
-		this.main = main;
-		
 		// Initiate periodical for action bar + timer
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
 			BaseComponent[] component;
@@ -53,6 +50,8 @@ public class GameManager {
 					player.sendMessage(finalAdditionalMsg);
 				}
 			});
+			// make it not delay 1 second at first?
+			// and remove +1 from timer
 		}, 20L, 20L);
 	}
 	
@@ -93,7 +92,7 @@ public class GameManager {
 			gameRunning = false;
 			timer = null;
 			TagCore.getQueueManager().clearQueue();
-			TagCore.getPlayerManager().flush();
+			TagCore.getPlayerManager().flushPlayers();
 			Bukkit.broadcastMessage("");
 			Bukkit.broadcastMessage(Chat.translate("  &eThe tag game has ended!"));
 			Bukkit.broadcastMessage("");

@@ -16,8 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Lobby implements Listener {
 	public static void setLobbyInventory(Player player) {
-		player.getInventory().clear();
-		
 		ItemStack play = new ItemStack(Material.CLOCK);
 		ItemMeta playItemMeta = play.getItemMeta();
 		playItemMeta.setDisplayName(Chat.translate("&6&lPlay"));

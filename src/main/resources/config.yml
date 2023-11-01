@@ -1,10 +1,22 @@
-# Main game options
-Tag:
+# General game options
+General:
   # World for tag arena
   TagWorld: 'Tag'
+
   # How long after enough people join the queue until the game starts (seconds)
   StartDelay: 30
+
   # How long is the game (minutes, seconds). Default is 5 mins 0 secs
   GameLength:
     - 5
     - 0
+
+# Options for during the game
+Game:
+  # How long someone needs to wait after getting tagged before tagging someone else (ticks) Default: 20
+  # 20 ticks = 1 second
+  TaggerCooldown: 20
+
+  # How long the title stays that tells the tagger they've been tagged (ticks) Default: 20
+  # 20 ticks = 1 second
+  TaggerTitle: 40

@@ -8,6 +8,8 @@ import java.util.List;
 
 public class ConfigManager {
 	private final TagCore main;
+	
+	/* GENERAL OPTIONS */
 	public ConfigManager(TagCore main) {
 		this.main = main;
 	}
@@ -21,14 +23,23 @@ public class ConfigManager {
 	}
 	
 	public String getTagWorldName() {
-		return main.getConfig().getString("Tag.TagWorld");
+		return main.getConfig().getString("General.TagWorld");
 	}
 	
 	public int getStartDelay() {
-		return main.getConfig().getInt("Tag.StartDelay", 60);
+		return main.getConfig().getInt("General.StartDelay", 60);
 	}
 	
 	public List<Integer> getGameLength() {
-		return main.getConfig().getIntegerList("Tag.GameLength");
+		return main.getConfig().getIntegerList("General.GameLength");
+	}
+	
+	/* GAME OPTIONS */
+	public long getTagCooldown() {
+		return main.getConfig().getLong("Game.TaggerCooldown", 20L);
+	}
+	
+	public int getTitleTicks() {
+		return main.getConfig().getInt("Game.TaggerTitle", 40);
 	}
 }
