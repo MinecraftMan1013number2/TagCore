@@ -4,8 +4,12 @@ import com.minecraftman.tagcore.TagCore;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class DatabaseManager {
+	private final String TABLENAME = "tag";
+	
 	private static Connection connection;
 	private final TagCore main;
 	
@@ -16,15 +20,28 @@ public class DatabaseManager {
 	
 	private void setupDatabase() {
 		try {
+//			getConnection().prepareStatement("""
+//                CREATE TABLE IF NOT EXISTS DATA(
+//                ID INT(36) NOT NULL,
+//                SOMETHING VARCHAR(32) NOT NULL,
+//                PRIMARY KEY(ID)
+//                )
+//            """);
+			
 			getConnection().prepareStatement("""
-                CREATE TABLE IF NOT EXISTS DATA(
+                CREATE TABLE IF NOT EXISTS PlayerData(
+                Player TINYTEXT NOT NULL PRIMARY,
+                Tokens MEDIUMINT(255) NOT NULL,
+                
+                
+                
                 ID INT(36) NOT NULL,
                 SOMETHING VARCHAR(32) NOT NULL,
                 PRIMARY KEY(ID)
                 )
             """);
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -35,12 +52,14 @@ public class DatabaseManager {
 				Class.forName("org.sqlite.JDBC");
 				connection = DriverManager.getConnection("jdbc:sqlite:"
 						+ main.getDataFolder().getAbsolutePath() + "/PlayerInfo.db");
-			} catch (Exception e) {
+			} catch (SQLException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
 		return connection;
 	}
 	
-	// TODO: watch lecture 82 & 84
+	public void setValue(String record, Object value) throws SQLException {
+		PreparedStatement ps = getConnection().prepareStatement("INSERT INTO " + TABLENAME + "");
+	}
 }
