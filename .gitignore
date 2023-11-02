@@ -6,6 +6,7 @@
 *.iws
 
 pom.xml
+*.xml
 
 # IntelliJ
 out/
