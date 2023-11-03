@@ -2,6 +2,7 @@ package com.minecraftman.tagcore.core.events;
 
 import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.core.Lobby;
+import com.minecraftman.tagcore.core.managers.PlayerManager;
 import com.minecraftman.tagcore.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,35 +30,29 @@ public class JoinQuit implements Listener {
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		event.setQuitMessage(Chat.translate("&8[&c-&8]&7 " + player.getName()));
-		TagCore.getQueueManager().removePlayer(player);
 		TagCore.getPlayerManager().leaveGame(true, player);
 		
-		/*
-		if {Tagger} is player:
-			set helmet of player to air
-			set chestplate of player to air
-			set leggings of player to air
-			set boots of player to air
-			broadcast "&a&l%player% was the tagger and left!" to {TagWorld}
-			wait 1 tick
-			if number of online players > 1:
-				delete {tagger}
-				delete {players::*}
-				wait 1 tick
-				set {players::*} to all players where [world of input is {TagWorld}]
-				set {Tagger} to a random element out of {players::*}
-				broadcast "&aThe new tagger is &a&l%{tagger}%&a!" to {TagWorld}
-				setTagger({tagger})
-				modifyTeam({tagger}, "tagger")
-				leaveTeam(player, "tagger")
-			else:
-				leaveTeam(player, "tagger")
-				broadcast "&aThere aren't enough players to continue the game!"
-				endGame()
-				
-		if {players::*} contains player:
-			saveItems(player)
-		 */
+		TagCore.getQueueManager().removePlayer(event.getPlayer());
+		if (TagCore.getQueueManager().getQueueLength() == 1 && Bukkit.getOnlinePlayers().size() == 1) {
+			TagCore.getQueueManager().clearQueue();
+			Bukkit.broadcastMessage(Chat.translate("&cThere is only 1 person online! Invite someone else to play"));
+			return;
+		}
+		
+		PlayerManager pm = TagCore.getPlayerManager();
+		if (pm.getTagger().equals(player)) {
+			pm.broadcastGame(Chat.translate("&a&l" + player.getName() + " was the tagger and left!"));
+			if (Bukkit.getOnlinePlayers().size() > 1) {
+				Player newTagger = pm.setRandomTagger(true);
+				pm.broadcastGame(Chat.translate("&aThe new tagger is &a&l" + newTagger.getName() + "&a!"));
+			} else {
+				Bukkit.broadcastMessage(Chat.translate("&aThere aren't enough players to continue the game!"));
+				TagCore.getGameManager().endGame(null);
+			}
+		}
+		
+		// if {players::*} contains player:
+		//   saveItems(player)
 	}
 	
 	public static void joinMsg(Player player) {

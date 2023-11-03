@@ -84,7 +84,7 @@ public class PlayerManager {
 		return tagger;
 	}
 	
-	// Set first param to null to remove armor
+	// Set first param to null to only remove armor
 	public void setTagger(Player player, Player oldTagger) {
 		
 		if (oldTagger != null) {
@@ -104,13 +104,19 @@ public class PlayerManager {
 		}
 	}
 	
+	public Player setRandomTagger(boolean removeArmor) {
+		Player newTagger = players.get((int)(Math.random() * players.size()));
+		setTagger(newTagger, (removeArmor ? tagger : null));
+		return newTagger;
+	}
+	
 	public boolean isPlaying(Player player) {
 		return players.contains(player);
 	}
 	
-	public void broadcastGame(String... msgs) {
+	public void broadcastGame(String... msg) {
 		players.forEach((p) ->
-			p.sendMessage(msgs)
+			p.sendMessage(msg)
 		);
 	}
 }

@@ -2,6 +2,7 @@ package com.minecraftman.tagcore;
 
 import com.minecraftman.tagcore.core.Lobby;
 import com.minecraftman.tagcore.core.events.JoinQuit;
+import com.minecraftman.tagcore.core.events.WorldChange;
 import com.minecraftman.tagcore.core.managers.*;
 import com.minecraftman.tagcore.queue.BaseCommand;
 import com.minecraftman.tagcore.queue.QueueManager;
@@ -35,6 +36,7 @@ public final class TagCore extends JavaPlugin {
 		
 		getServer().getPluginManager().registerEvents(new Lobby(), this);
 		getServer().getPluginManager().registerEvents(new JoinQuit(), this);
+		getServer().getPluginManager().registerEvents(new WorldChange(this), this);
 	}
 	
 	@Override

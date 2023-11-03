@@ -9,10 +9,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
@@ -70,9 +68,8 @@ public class GameManager {
 		gameRunning = true;
 		this.timer = timer;
 		
-		ArrayList<Player> players = TagCore.getQueueManager().getQueue();
 		playerManager.transferPlayers();
-		playerManager.setTagger(players.get((int)(Math.random() * players.size())), null);
+		playerManager.setRandomTagger(false);
 		BaseComponent playersComponent = new TextComponent(Chat.translate("&aThe tagger has been chosen!") + "\n" + Chat.translate("&aThe tagger is &a&l" + TagCore.getPlayerManager().getTagger().getName() +"&a!"));
 		BaseComponent publicComponent = new TextComponent(Chat.translate("&aThe tag game has started! Join the queue with \"/queue\" or click me to join!"));
 		publicComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/queue"));
