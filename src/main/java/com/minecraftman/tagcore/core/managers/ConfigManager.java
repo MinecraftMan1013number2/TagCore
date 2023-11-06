@@ -4,8 +4,6 @@ import com.minecraftman.tagcore.TagCore;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-import java.util.List;
-
 public class ConfigManager {
 	private final TagCore main;
 	
@@ -23,23 +21,36 @@ public class ConfigManager {
 	}
 	
 	public String getTagWorldName() {
-		return main.getConfig().getString("General.TagWorld");
+		return main.getConfig().getString("general.tag-world");
 	}
 	
 	public int getStartDelay() {
-		return main.getConfig().getInt("General.StartDelay", 60);
+		return main.getConfig().getInt("general.start-delay", 60);
 	}
 	
-	public List<Integer> getGameLength() {
-		return main.getConfig().getIntegerList("General.GameLength");
+	public int[] getGameLength() {
+		return new int[]{main.getConfig().getInt("general.game-length.minutes"), main.getConfig().getInt("general.game-length.seconds")};
 	}
 	
 	/* GAME OPTIONS */
 	public long getTagCooldown() {
-		return main.getConfig().getLong("Game.TaggerCooldown", 20L);
+		return main.getConfig().getLong("game.tagger-cooldown", 20L);
 	}
 	
 	public int getTitleTicks() {
-		return main.getConfig().getInt("Game.TaggerTitle", 40);
+		return main.getConfig().getInt("game.tagger-title", 40);
+	}
+	
+	/* TAG TOKEN OPTIONS */
+	public int getTokensForAttacker() {
+		return main.getConfig().getInt("tokens.on-tag");
+	}
+	
+	public int getTokensForVictim() {
+		return main.getConfig().getInt("tokens.on-tagged");
+	}
+	
+	public int getPlaytimeReward() {
+		return main.getConfig().getInt("tokens.playtime-reward");
 	}
 }

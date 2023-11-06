@@ -24,23 +24,23 @@ public class PreGameManager {
 	
 	public void initiateStartCountdown(@Nullable Player player) {
 		if (Bukkit.getOnlinePlayers().size() > 1) {
-			if (TagCore.getQueueManager().getQueueLength() >= 2) {
+			if (main.getQueueManager().getQueueLength() >= 2) {
 				if (cointdownToStart != -1) return;
 				
-				cointdownToStart = TagCore.getConfigManager().getStartDelay();
+				cointdownToStart = main.getConfigManager().getStartDelay();
 		        new BukkitRunnable() {
 		            @Override
 		            public void run() {
 		                if (cointdownToStart <= 0) {
 			                cointdownToStart = -1;
-							
-			                TagCore.getGameManager().startGame();
+			                
+			                main.getGameManager().startGame();
 							
 		                    cancel();
 		                    return;
 		                }
 						
-						QueueManager queueManager = TagCore.getQueueManager();
+						QueueManager queueManager = main.getQueueManager();
 						if (queueManager.getQueueLength() > 1) {
 							if (cointdownToStart % 10 == 0) {
 								TextComponent msg = new TextComponent(String.format("§a§lThe tag game will be starting in %s seconds!" +

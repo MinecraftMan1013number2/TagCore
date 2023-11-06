@@ -11,13 +11,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class GameManager {
 	private boolean gameRunning = false;
 	Timer timer = null;
 	
+	private final TagCore main;
+	
 	public GameManager(TagCore main) {
+		this.main = main;
+		
 		// Initiate periodical for action bar + timer
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
 			BaseComponent[] component;
@@ -56,11 +58,11 @@ public class GameManager {
 	public void startGame() {
 		if (gameRunning) return;
 		
-		PlayerManager playerManager = TagCore.getPlayerManager();
+		PlayerManager playerManager = main.getPlayerManager();
 		
-		List<Integer> time = TagCore.getConfigManager().getGameLength();
-		Timer timer = new Timer(time.get(0), time.get(1));
-		TagCore.getQueueManager().getQueue().forEach(q -> {
+		int[] time = main.getConfigManager().getGameLength();
+		Timer timer = new Timer(time[0], time[1]);
+		main.getQueueManager().getQueue().forEach(q -> {
 			q.sendMessage(Chat.translate("&aThere are enough people to start! Starting..."));
 			playerManager.joinGame(q, false);
 		});
@@ -70,7 +72,7 @@ public class GameManager {
 		
 		playerManager.transferPlayers();
 		playerManager.setRandomTagger(false);
-		BaseComponent playersComponent = new TextComponent(Chat.translate("&aThe tagger has been chosen!") + "\n" + Chat.translate("&aThe tagger is &a&l" + TagCore.getPlayerManager().getTagger().getName() +"&a!"));
+		BaseComponent playersComponent = new TextComponent(Chat.translate("&aThe tagger has been chosen!") + "\n" + Chat.translate("&aThe tagger is &a&l" + main.getPlayerManager().getTagger().getName() +"&a!"));
 		BaseComponent publicComponent = new TextComponent(Chat.translate("&aThe tag game has started! Join the queue with \"/queue\" or click me to join!"));
 		publicComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/queue"));
 		
@@ -88,8 +90,8 @@ public class GameManager {
 		if (timer != null) {
 			gameRunning = false;
 			timer = null;
-			TagCore.getQueueManager().clearQueue();
-			TagCore.getPlayerManager().flushPlayers();
+			main.getQueueManager().clearQueue();
+			main.getPlayerManager().flushPlayers();
 			Bukkit.broadcastMessage("");
 			Bukkit.broadcastMessage(Chat.translate("  &eThe tag game has ended!"));
 			Bukkit.broadcastMessage("");

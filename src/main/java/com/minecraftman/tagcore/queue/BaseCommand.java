@@ -18,26 +18,30 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BaseCommand implements CommandExecutor, TabCompleter {
+	private final TagCore main;
+	public BaseCommand(TagCore main) {
+		this.main = main;
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (sender instanceof Player) {
-			Player player = (Player) sender;
+		if (sender instanceof Player player) {
 			if (args.length >= 1 && args[0].equals("leave")) {
-				if (TagCore.getQueueManager().removePlayer(player)) {
+				if (main.getQueueManager().removePlayer(player)) {
 					player.sendMessage(Chat.translate("&eYou have left the queue."));
 				} else {
 					player.sendMessage(Chat.translate("&cYou are not in the queue!"));
 				}
 			} else {
 				if (Bukkit.getOnlinePlayers().size() > 1) {
-					if (TagCore.getPlayerManager().getTagger() == null) {
-						QueueManager queueManager = TagCore.getQueueManager();
+					if (main.getPlayerManager().getTagger() == null) {
+						QueueManager queueManager = main.getQueueManager();
 						if (!queueManager.getQueue().contains(player)) {
-							if (!TagCore.getGameComponents().countdownStarted()) {
+							if (!main.getGameComponents().countdownStarted()) {
 								queueManager.addPlayer(player);
 								player.sendMessage(Chat.translate("&eYou have joined the queue!"));
 								if (queueManager.getQueueLength() >= 2) {
-									TagCore.getGameComponents().initiateStartCountdown(null);
+									main.getGameComponents().initiateStartCountdown(null);
 								} else {
 									BaseComponent component = new TextComponent(Chat.translate("&eThere is a player in the queue! Join the queue or click me to play tag with them!"));
 									component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/queue"));
@@ -46,15 +50,15 @@ public class BaseCommand implements CommandExecutor, TabCompleter {
 									);
 								}
 							} else {
-								TagCore.getPlayerManager().joinGame(player, true);
+								main.getPlayerManager().joinGame(player, true);
 							}
 						} else {
 							player.sendMessage(Chat.translate("&cYou are already in the queue!"));
 						}
 					} else {
-						if (!TagCore.getPlayerManager().isPlaying(player)) {
+						if (!main.getPlayerManager().isPlaying(player)) {
 							player.sendMessage(Chat.translate("&eYou joined the game!"));
-							TagCore.getPlayerManager().joinGame(player, true);
+							main.getPlayerManager().joinGame(player, true);
 						} else {
 							player.sendMessage(Chat.translate("&cYou are already in the game! If this is an error, do /spawn!"));
 						}

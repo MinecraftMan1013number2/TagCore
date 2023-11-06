@@ -17,10 +17,10 @@ public class TagCommand implements CommandExecutor {
 		if (args.length > 0) {
 			if (sender instanceof Player player) {
 				if (args[0].startsWith("join")) {
-					TagCore.getQueueManager().addPlayer(player);
+					main.getQueueManager().addPlayer(player);
 					return true;
 				} else if (args[0].equals("leave")) {
-					TagCore.getPlayerManager().leaveGame(true, player);
+					main.getPlayerManager().leaveGame(true, player);
 					return true;
 				}
 			} else {
@@ -31,15 +31,15 @@ public class TagCommand implements CommandExecutor {
 				switch (args[0]) {
 					case "stop":
 					case "end":
-						TagCore.getGameManager().endGame(sender);
+						main.getGameManager().endGame(sender);
 						break;
 					case "start":
-						TagCore.getGameManager().startGame();
+						main.getGameManager().startGame();
 						break;
 					case "reload":
 						sender.sendMessage(Chat.translate("&eReloading..."));
-						TagCore.getGameManager().endGame(sender);
-						TagCore.getConfigManager().reloadConfig();
+						main.getGameManager().endGame(sender);
+						main.getConfigManager().reloadConfig();
 						sender.sendMessage(Chat.translate("&6Reloaded!"));
 						break;
 					default:

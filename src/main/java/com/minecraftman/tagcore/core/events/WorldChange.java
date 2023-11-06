@@ -19,8 +19,8 @@ public class WorldChange implements Listener {
 	@EventHandler
 	public void playerWorldChange(PlayerChangedWorldEvent event) {
 		Player player = event.getPlayer();
-		if (event.getFrom().getName().equals(TagCore.getConfigManager().getTagWorldName()) && TagCore.getPlayerManager().isPlaying(player)) {
-			TagCore.getPlayerManager().leaveGame(true, player);
+		if (event.getFrom().getName().equals(main.getConfigManager().getTagWorldName()) && main.getPlayerManager().isPlaying(player)) {
+			main.getPlayerManager().leaveGame(true, player);
 		}
 	}
 	

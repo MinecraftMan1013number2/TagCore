@@ -17,7 +17,9 @@ public class PlayerManager {
 	private Player tagger;
 	private final TeamManager teamManager;
 	
-	public PlayerManager() {
+	private final TagCore main;
+	public PlayerManager(TagCore main) {
+		this.main = main;
 		this.players = new ArrayList<>();
 		this.teamManager = new TeamManager();
 	}
@@ -33,7 +35,7 @@ public class PlayerManager {
 					p.sendMessage(Chat.translate("&2&l" + player.getName() + "&a has joined the tag game!"))
 			);
 		}
-		player.teleport(TagCore.getConfigManager().getTagWorld().getSpawnLocation());
+		player.teleport(main.getConfigManager().getTagWorld().getSpawnLocation());
 		player.getInventory().clear();
 		teamManager.setTeam(player, TeamManager.TagTeam.RUNNER);
 		/*
@@ -75,8 +77,8 @@ public class PlayerManager {
 	
 	public void transferPlayers() {
 		if (players.isEmpty()) {
-			players.addAll(TagCore.getQueueManager().getQueue());
-			TagCore.getQueueManager().clearQueue();
+			players.addAll(main.getQueueManager().getQueue());
+			main.getQueueManager().clearQueue();
 		}
 	}
 	
@@ -93,14 +95,14 @@ public class PlayerManager {
 		
 		tagger = player;
 		if (tagger != null) {
-			tagger.sendTitle(Chat.translate("&4&lYou are the tagger!"), Chat.translate("&cTag other people!"), 10, TagCore.getConfigManager().getTitleTicks(), 20);
+			tagger.sendTitle(Chat.translate("&4&lYou are the tagger!"), Chat.translate("&cTag other people!"), 10, main.getConfigManager().getTitleTicks(), 20);
 			ItemStack[] armor = new ItemStack[4];
 			armor[3] = TagArmor.getTaggerSkull();
 			armor[2] = TagArmor.getTaggerChestplate();
 			armor[1] = TagArmor.getTaggerLeggings();
 			armor[0] = TagArmor.getTaggerBoots();
 			tagger.getInventory().setArmorContents(armor);
-			TagCore.getPlayerManager().getTeamManager().setTeam(tagger, TeamManager.TagTeam.TAGGER);
+			main.getPlayerManager().getTeamManager().setTeam(tagger, TeamManager.TagTeam.TAGGER);
 		}
 	}
 	

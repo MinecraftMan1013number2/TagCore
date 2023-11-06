@@ -3,6 +3,7 @@ package com.minecraftman.tagcore.core.events;
 import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.core.managers.PlayerManager;
 import com.minecraftman.tagcore.core.managers.TeamManager;
+import com.minecraftman.tagcore.core.TagPlayer;
 import com.minecraftman.tagcore.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class Damage implements Listener {
 	public void onDamage(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Player attacker) {
 			if (event.getEntity() instanceof Player victim) {
-				PlayerManager pm = TagCore.getPlayerManager();
+				PlayerManager pm = main.getPlayerManager();
 				if (attacker.equals(pm.getTagger()) && !attacker.equals(victim)) {
 					if (attacker.hasMetadata("GottenTaggedRecently")) {
 						event.setCancelled(true);
@@ -36,12 +37,19 @@ public class Damage implements Listener {
 						Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
 							victim.setHealth(victim.getHealth() + event.getFinalDamage());
 							
+							TagPlayer tagVictim = TagPlayer.getTagPlayer(victim.getUniqueId());
+							TagPlayer tagAttacker = TagPlayer.getTagPlayer(attacker.getUniqueId());
+							int tokensForVictim = main.getConfigManager().getTokensForVictim();
+							int tokensForAttacker = main.getConfigManager().getTokensForAttacker();
+							if (tagVictim.getTagTokens() > 0) tagVictim.removeTagTokens(tokensForVictim);
+							tagAttacker.addTagTokens(tokensForAttacker);
+							
 							// remove 1 from {tokens::%victim's uuid%} if {tokens::%victim's uuid%} > 0
 							// add 3 to {tokens::%attacker's uuid%}
 							
 							Bukkit.getScheduler().scheduleSyncDelayedTask(main, () ->
 									victim.removeMetadata("GottenTaggedRecently", main),
-									TagCore.getConfigManager().getTagCooldown());
+									main.getConfigManager().getTagCooldown());
 						}, 1L);
 						
 					}
