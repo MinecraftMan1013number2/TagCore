@@ -2,6 +2,7 @@ package com.minecraftman.tagcore.core.managers;
 
 import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.core.Lobby;
+import com.minecraftman.tagcore.core.TagPlayer;
 import com.minecraftman.tagcore.utils.Chat;
 import com.minecraftman.tagcore.utils.TagArmor;
 import org.bukkit.Bukkit;
@@ -38,11 +39,11 @@ public class PlayerManager {
 		player.teleport(main.getConfigManager().getTagWorld().getSpawnLocation());
 		player.getInventory().clear();
 		teamManager.setTeam(player, TeamManager.TagTeam.RUNNER);
-		/*
-		wait 1 tick
-		giveItems({_p})
-		 */
 		
+		Bukkit.getScheduler().runTaskLater(main, () -> {
+			player.getInventory().clear();
+			player.getInventory().setContents(TagPlayer.getTagPlayer(player.getUniqueId()).getSavedInventory().getContents());
+		}, 20L);
 	}
 	
 	public void leaveGame(boolean sendMsg, Player player) {
@@ -65,7 +66,7 @@ public class PlayerManager {
 	}
 	
 	private void removeActions(Player player) {
-//		saveItems({_p})
+		TagPlayer.getTagPlayer(player.getUniqueId()).saveItems();
 		teamManager.removeTeam(player);
 		
 		Bukkit.getServer().dispatchCommand(player, "spawn");

@@ -23,22 +23,13 @@ public class DatabaseManager {
                 ID INT AUTO_INCREMENT UNIQUE,
                 UUID VARCHAR(36) NOT NULL UNIQUE,
                 Tokens INT(32) NOT NULL,
+                Inventory BLOB,
                 PRIMARY KEY(ID)
                 )
                 """
 			).execute();
 			
-			getConnection().prepareStatement("""
-                CREATE TABLE IF NOT EXISTS tag_player_items (
-                ID INT AUTO_INCREMENT UNIQUE,
-                UUID VARCHAR(36) NOT NULL UNIQUE,
-                Tokens INT(32) NOT NULL,
-                PRIMARY KEY(ID)
-                )
-                """
-			).execute();
-			
-			main.getLogger().info("Database created!");
+			main.getLogger().info("Databases created!");
 		} catch (SQLException e) {
 			main.getLogger().log(Level.SEVERE, "The database could not be created!");
 			throw new RuntimeException(e);

@@ -44,9 +44,6 @@ public class Damage implements Listener {
 							if (tagVictim.getTagTokens() > 0) tagVictim.removeTagTokens(tokensForVictim);
 							tagAttacker.addTagTokens(tokensForAttacker);
 							
-							// remove 1 from {tokens::%victim's uuid%} if {tokens::%victim's uuid%} > 0
-							// add 3 to {tokens::%attacker's uuid%}
-							
 							Bukkit.getScheduler().scheduleSyncDelayedTask(main, () ->
 									victim.removeMetadata("GottenTaggedRecently", main),
 									main.getConfigManager().getTagCooldown());

@@ -1,6 +1,9 @@
 package com.minecraftman.tagcore.core;
 
 import com.minecraftman.tagcore.TagCore;
+import com.minecraftman.tagcore.utils.InventoryUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,17 +24,19 @@ public class TagPlayer {
 	
 	private final UUID uuid;
 	private int tokens;
+	private Inventory savedInventory;
 	
 	public TagPlayer(TagCore main, UUID uuid) throws SQLException {
 		this.uuid = uuid;
 		players.put(uuid, this);
 		this.main = main;
 
-		PreparedStatement p = main.getDatabaseManager().getConnection().prepareStatement("SELECT Tokens FROM tag_playerdata WHERE UUID = ?;");
-		p.setString(1, uuid.toString());
-		ResultSet results = p.executeQuery();
-		if (results.next()) {
-			tokens = results.getInt("Tokens");
+		PreparedStatement tokensStatement = main.getDatabaseManager().getConnection().prepareStatement("SELECT Tokens,Inventory FROM tag_playerdata WHERE UUID = ?;");
+		tokensStatement.setString(1, uuid.toString());
+		ResultSet resultSet = tokensStatement.executeQuery();
+		if (resultSet.next()) {
+			tokens = resultSet.getInt("Tokens");
+			savedInventory = InventoryUtils.deserializePlayerInventory(resultSet.getBytes("Inventory"));
 		} else {
 			// Add to database
 			tokens = 0;
@@ -62,5 +67,23 @@ public class TagPlayer {
 	
 	public int getTagTokens() {
 		return tokens;
+	}
+	
+	public void saveItems() {
+		savedInventory = Bukkit.getPlayer(uuid).getInventory();
+		
+		try {
+			byte[] serializedInv = InventoryUtils.serializeInventory(savedInventory);
+			PreparedStatement statement = main.getDatabaseManager().getConnection().prepareStatement("UPDATE tag_playerdata SET Inventory = ? WHERE UUID = ?;");
+			statement.setString(2, uuid.toString());
+			statement.setBytes(1, serializedInv);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public Inventory getSavedInventory() {
+		return savedInventory;
 	}
 }

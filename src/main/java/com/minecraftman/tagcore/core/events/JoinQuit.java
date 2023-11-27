@@ -75,8 +75,8 @@ public class JoinQuit implements Listener {
 			}
 		}
 		
-		// if {players::*} contains player:
-		//   saveItems(player)
+		if (main.getPlayerManager().isPlaying(player))
+			TagPlayer.getTagPlayer(player.getUniqueId()).saveItems();
 	}
 	
 	public static void joinMsg(Player player) {
