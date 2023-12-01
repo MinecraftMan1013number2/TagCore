@@ -1,10 +1,10 @@
 package com.minecraftman.tagcore;
 
-import com.minecraftman.tagcore.core.Lobby;
-import com.minecraftman.tagcore.core.events.Damage;
-import com.minecraftman.tagcore.core.events.JoinQuit;
-import com.minecraftman.tagcore.core.events.WorldChange;
-import com.minecraftman.tagcore.core.managers.*;
+import com.minecraftman.tagcore.gameplay.Lobby;
+import com.minecraftman.tagcore.gameplay.events.Damage;
+import com.minecraftman.tagcore.gameplay.events.JoinQuit;
+import com.minecraftman.tagcore.gameplay.events.WorldChange;
+import com.minecraftman.tagcore.gameplay.managers.*;
 import com.minecraftman.tagcore.queue.BaseCommand;
 import com.minecraftman.tagcore.queue.QueueManager;
 import com.minecraftman.tagcore.utils.Chat;

@@ -1,4 +1,4 @@
-package com.minecraftman.tagcore.core;
+package com.minecraftman.tagcore.gameplay;
 
 import com.minecraftman.tagcore.utils.Chat;
 import org.bukkit.Bukkit;

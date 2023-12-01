@@ -14,3 +14,7 @@ commands:
   tag:
     description: 'The base command for the tag plugin'
     aliases: [tagcore]
+
+  announcer:
+    permission: announcer.*
+    permission-message: 'You do not have permission to execute this command!'

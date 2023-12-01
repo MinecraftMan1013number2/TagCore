@@ -1,9 +1,12 @@
-package com.minecraftman.tagcore.core;
+package com.minecraftman.tagcore.gameplay;
 
 import com.minecraftman.tagcore.TagCore;
+import com.minecraftman.tagcore.utils.Chat;
 import com.minecraftman.tagcore.utils.InventoryUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,9 +15,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class TagPlayer {
-	private final TagCore main;
+	// TagPlayer object management
 	private static final HashMap<UUID, TagPlayer> players = new HashMap<>();
-	
 	public static TagPlayer getTagPlayer(UUID uuid) {
 		return players.get(uuid);
 	}
@@ -22,6 +24,9 @@ public class TagPlayer {
 		players.remove(uuid);
 	}
 	
+	
+	private final TagCore main;
+	// TagPlayer Data
 	private final UUID uuid;
 	private int tokens;
 	private Inventory savedInventory;
@@ -79,11 +84,16 @@ public class TagPlayer {
 			statement.setBytes(1, serializedInv);
 			statement.executeUpdate();
 		} catch (SQLException e) {
+			Player player = Bukkit.getPlayer(uuid);
+			if (player != null)
+				player.sendMessage(Chat.translate("&cThere was an error saving your items! Please take a SCREENSHOT of your inventory and notify an administrator!"));
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public Inventory getSavedInventory() {
-		return savedInventory;
+	public void restoreItems() {
+		PlayerInventory inv = Bukkit.getPlayer(uuid).getInventory();
+		inv.clear();
+		inv.setContents(savedInventory.getContents());
 	}
 }

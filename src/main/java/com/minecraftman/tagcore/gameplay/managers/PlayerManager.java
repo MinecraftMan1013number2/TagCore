@@ -1,8 +1,8 @@
-package com.minecraftman.tagcore.core.managers;
+package com.minecraftman.tagcore.gameplay.managers;
 
 import com.minecraftman.tagcore.TagCore;
-import com.minecraftman.tagcore.core.Lobby;
-import com.minecraftman.tagcore.core.TagPlayer;
+import com.minecraftman.tagcore.gameplay.Lobby;
+import com.minecraftman.tagcore.gameplay.TagPlayer;
 import com.minecraftman.tagcore.utils.Chat;
 import com.minecraftman.tagcore.utils.TagArmor;
 import org.bukkit.Bukkit;
@@ -40,10 +40,9 @@ public class PlayerManager {
 		player.getInventory().clear();
 		teamManager.setTeam(player, TeamManager.TagTeam.RUNNER);
 		
-		Bukkit.getScheduler().runTaskLater(main, () -> {
-			player.getInventory().clear();
-			player.getInventory().setContents(TagPlayer.getTagPlayer(player.getUniqueId()).getSavedInventory().getContents());
-		}, 20L);
+		Bukkit.getScheduler().runTaskLater(main, () ->
+			TagPlayer.getTagPlayer(player.getUniqueId()).restoreItems()
+				, 20L);
 	}
 	
 	public void leaveGame(boolean sendMsg, Player player) {

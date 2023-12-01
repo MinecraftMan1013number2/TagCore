@@ -1,4 +1,4 @@
-package com.minecraftman.tagcore.core.managers;
+package com.minecraftman.tagcore.gameplay.managers;
 
 import com.minecraftman.tagcore.TagCore;
 

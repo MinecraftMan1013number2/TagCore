@@ -1,7 +1,7 @@
-package com.minecraftman.tagcore.core.events;
+package com.minecraftman.tagcore.gameplay.events;
 
 import com.minecraftman.tagcore.TagCore;
-import com.minecraftman.tagcore.core.Lobby;
+import com.minecraftman.tagcore.gameplay.Lobby;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;

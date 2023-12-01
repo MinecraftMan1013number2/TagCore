@@ -1,0 +1,10 @@
+# In seconds
+frequency: 120
+
+prefix: "&5[&2Announcer&5]&r"
+
+# todo: add add instructions on how to use advanced options
+messages:
+  - "<link:https://discord.gg/dAze7FuJfa>&9Dont forget to join our discord! &bhttps://discord.gg/dAze7FuJfa"
+  - "<ttp:Click to get the IP!><sgt:TagNotMe.minehut.gg>&9Be sure to save the IP! &bTagNotMe.minehut.gg"
+  - "<cmd:/shop>&eBuy stuff from the shop to gain an advantage! Click me to open the shop!"
