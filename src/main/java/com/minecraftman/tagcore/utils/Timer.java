@@ -7,9 +7,7 @@ public class Timer {
 	private final Date endDate;
 	
 	public Timer(int minutes, int seconds) {
-		// 4ms needs to be added to get an accurate formatted time for some reason
-		// im guessing it's execution time, but idk
-		int ms = minutes*60000 + (seconds+1)*1000;
+		int ms = minutes*60000 + seconds*1000;
 		endDate = new Date();
 		endDate.setTime(endDate.getTime() + ms);
 	}

@@ -37,8 +37,7 @@ public class GameManager {
 					String secsLeft = (secs != 0) ? ((secs + " second") + ((secs == 1) ? "" : "s")) : "";
 					String timeLeft = minsLeft + secsLeft;
 					String grammar = (timeLeft.startsWith("1 ") ? "is" : "are");
-//					if (!timeLeft.isEmpty())
-						additionalMsg = new String[]{"", Chat.translate(" &eThere " + grammar + " &6" + timeLeft + "&e left!"), ""};
+					additionalMsg = new String[]{"", Chat.translate(" &eThere " + grammar + " &6" + timeLeft + "&e left!"), ""};
 				}
 			} else {
 				component = TextComponent.fromLegacyText(Chat.translate("&bThere is no game running!"));
@@ -50,9 +49,7 @@ public class GameManager {
 					player.sendMessage(finalAdditionalMsg);
 				}
 			});
-			// make it not delay 1 second at first?
-			// and remove +1 from timer
-		}, 20L, 20L);
+		}, 0L, 20L);
 	}
 	
 	public void startGame() {

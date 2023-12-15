@@ -64,7 +64,7 @@ public class JoinQuit implements Listener {
 		}
 		
 		PlayerManager pm = main.getPlayerManager();
-		if (pm.getTagger().equals(player)) {
+		if (pm.getTagger() != null && pm.getTagger().equals(player)) {
 			pm.broadcastGame(Chat.translate("&a&l" + player.getName() + " was the tagger and left!"));
 			if (Bukkit.getOnlinePlayers().size() > 1) {
 				Player newTagger = pm.setRandomTagger(true);

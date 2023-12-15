@@ -17,6 +17,7 @@ public class InventoryUtils {
 	}
 	
 	public static Inventory deserializePlayerInventory(byte[] data) {
+		if (data == null) return null;
 		// Deserialize the byte array into a PlayerInventory object
 		try (ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
 		     ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {

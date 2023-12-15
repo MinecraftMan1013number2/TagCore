@@ -3,13 +3,20 @@ package com.minecraftman.tagcore.gameplay.managers;
 import com.minecraftman.tagcore.TagCore;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.util.List;
 
 public class ConfigManager {
 	private final TagCore main;
-	
-	/* GENERAL OPTIONS */
 	public ConfigManager(TagCore main) {
 		this.main = main;
+	}
+	
+	/* GENERAL OPTIONS */
+	private FileConfiguration mainConfig() {
+		return main.getConfig();
 	}
 	
 	public void reloadConfig() {
@@ -21,36 +28,59 @@ public class ConfigManager {
 	}
 	
 	public String getTagWorldName() {
-		return main.getConfig().getString("general.tag-world");
+		return mainConfig().getString("general.tag-world");
 	}
 	
 	public int getStartDelay() {
-		return main.getConfig().getInt("general.start-delay", 60);
+		return mainConfig().getInt("general.start-delay", 60);
 	}
 	
 	public int[] getGameLength() {
-		return new int[]{main.getConfig().getInt("general.game-length.minutes"), main.getConfig().getInt("general.game-length.seconds")};
+		return new int[]{mainConfig().getInt("general.game-length.minutes"), mainConfig().getInt("general.game-length.seconds")};
 	}
 	
 	/* GAME OPTIONS */
 	public long getTagCooldown() {
-		return main.getConfig().getLong("game.tagger-cooldown", 20L);
+		return mainConfig().getLong("game.tagger-cooldown", 20L);
 	}
 	
 	public int getTitleTicks() {
-		return main.getConfig().getInt("game.tagger-title", 40);
+		return mainConfig().getInt("game.tagger-title", 40);
 	}
 	
 	/* TAG TOKEN OPTIONS */
 	public int getTokensForAttacker() {
-		return main.getConfig().getInt("tokens.on-tag");
+		return mainConfig().getInt("tokens.on-tag");
 	}
 	
 	public int getTokensForVictim() {
-		return main.getConfig().getInt("tokens.on-tagged");
+		return mainConfig().getInt("tokens.on-tagged");
 	}
 	
 	public int getPlaytimeReward() {
-		return main.getConfig().getInt("tokens.playtime-reward");
+		return mainConfig().getInt("tokens.playtime-reward");
+	}
+	
+	
+	
+	/* ANNOUNCER */
+	private YamlConfiguration announcerYaml() {
+		return main.getAnnouncerYaml();
+	}
+	
+	public List<String> getAnnouncerMessages() {
+		return announcerYaml().getStringList("messages");
+	}
+	
+	public String getAnnouncerPrefix() {
+		return announcerYaml().getString("prefix");
+	}
+	
+	public long getAnnouncerFrequency() {
+		return announcerYaml().getLong("frequency");
+	}
+	
+	public boolean announcerPadding() {
+		return announcerYaml().getBoolean("padding", true);
 	}
 }

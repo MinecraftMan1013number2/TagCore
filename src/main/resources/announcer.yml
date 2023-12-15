@@ -1,10 +1,24 @@
 # In seconds
 frequency: 120
 
+# Prefix for announcer command
+# Will NOT broadcast before each announcement. If you want to do this, you need to manually add it to each message.
 prefix: "&5[&2Announcer&5]&r"
 
-# todo: add add instructions on how to use advanced options
+# Should all announcements have a line break and after them?
+padding: true
+
+# How to use actions:
+# "<action:value>Message to broadcast"
+#
+# OPTIONS FOR CLICK ACTIONS (only 1 will work per message)
+# link/url    --> Prompts the user to open the link (value is the link to open)
+# command/cmd --> Forces the player to execute a command (value is the command)
+# suggest/sgt --> Opens the player's chat and puts text into the (value is the text to suggest; add a "/" before to make it a command if they hit enter)
+#
+# HOVER ACTION (can combine with a click action)
+# tooltip/ttp --> Shows text in the tooltip (box above cursor) (use "\n" for a new line in the tooltip)
 messages:
   - "<link:https://discord.gg/dAze7FuJfa>&9Dont forget to join our discord! &bhttps://discord.gg/dAze7FuJfa"
-  - "<ttp:Click to get the IP!><sgt:TagNotMe.minehut.gg>&9Be sure to save the IP! &bTagNotMe.minehut.gg"
+  - "<tooltip:Click to get the IP!><sgt:TagNotMe.minehut.gg>&9Be sure to save the IP! &bTagNotMe.minehut.gg"
   - "<cmd:/shop>&eBuy stuff from the shop to gain an advantage! Click me to open the shop!"
