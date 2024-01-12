@@ -45,11 +45,16 @@ public class JoinQuit implements Listener {
 		if (!player.isOp()) player.getInventory().clear();
 		
 		Lobby.setLobbyInventory(player);
+		
+		main.getSidebarManager().setCustomScoreboard(player);
+		main.getSidebarManager().setSuffix("playercount", "&7" + Bukkit.getOnlinePlayers().size() + "/10");
 	}
 	
 	@EventHandler
 	public void onQuit(@NotNull PlayerQuitEvent event) {
 		Player player = event.getPlayer();
+		
+		main.getSidebarManager().setSuffix("playercount", "&7" + Bukkit.getOnlinePlayers().size() + "/10");
 		
 		TagPlayer.removeTagPlayer(player.getUniqueId());
 		

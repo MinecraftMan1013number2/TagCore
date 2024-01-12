@@ -2,7 +2,7 @@ package com.minecraftman.tagcore.gameplay.events;
 
 import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.gameplay.managers.PlayerManager;
-import com.minecraftman.tagcore.gameplay.managers.TeamManager;
+import com.minecraftman.tagcore.gameplay.managers.scoreboard.TeamManager;
 import com.minecraftman.tagcore.gameplay.TagPlayer;
 import com.minecraftman.tagcore.utils.Chat;
 import org.bukkit.Bukkit;

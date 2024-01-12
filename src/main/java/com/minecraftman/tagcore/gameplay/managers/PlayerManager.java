@@ -3,11 +3,13 @@ package com.minecraftman.tagcore.gameplay.managers;
 import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.gameplay.Lobby;
 import com.minecraftman.tagcore.gameplay.TagPlayer;
+import com.minecraftman.tagcore.gameplay.managers.scoreboard.TeamManager;
 import com.minecraftman.tagcore.utils.Chat;
 import com.minecraftman.tagcore.utils.TagArmor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -69,7 +71,6 @@ public class PlayerManager {
 		teamManager.removeTeam(player);
 		
 		Bukkit.getServer().dispatchCommand(player, "spawn");
-		// wait 1 tick?
 		player.getInventory().clear();
 		Lobby.setLobbyInventory(player);
 		player.sendMessage(Chat.translate("&aYou have left the game."));
@@ -86,8 +87,8 @@ public class PlayerManager {
 		return tagger;
 	}
 	
-	// Set first param to null to only remove armor
-	public void setTagger(Player player, Player oldTagger) {
+	// Set first param to null to only remove tagger armor
+	public void setTagger(@Nullable Player player, Player oldTagger) {
 		
 		if (oldTagger != null) {
 			oldTagger.getInventory().setArmorContents(null);
@@ -96,13 +97,17 @@ public class PlayerManager {
 		tagger = player;
 		if (tagger != null) {
 			tagger.sendTitle(Chat.translate("&4&lYou are the tagger!"), Chat.translate("&cTag other people!"), 10, main.getConfigManager().getTitleTicks(), 20);
-			ItemStack[] armor = new ItemStack[4];
-			armor[3] = TagArmor.getTaggerSkull();
-			armor[2] = TagArmor.getTaggerChestplate();
-			armor[1] = TagArmor.getTaggerLeggings();
-			armor[0] = TagArmor.getTaggerBoots();
-			tagger.getInventory().setArmorContents(armor);
+			tagger.getInventory().setArmorContents(new ItemStack[]{
+					TagArmor.getTaggerBoots(),
+					TagArmor.getTaggerLeggings(),
+					TagArmor.getTaggerChestplate(),
+					TagArmor.getTaggerSkull()
+			});
 			main.getPlayerManager().getTeamManager().setTeam(tagger, TeamManager.TagTeam.TAGGER);
+			
+			main.getSidebarManager().setSuffix("tagger", "&7" + tagger.getName());
+		} else {
+			main.getSidebarManager().setSuffix("tagger", "&7None");
 		}
 	}
 	
