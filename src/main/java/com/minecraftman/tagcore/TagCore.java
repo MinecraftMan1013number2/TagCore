@@ -29,15 +29,15 @@ public final class TagCore extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		getConfig().options().copyDefaults();
+		saveDefaultConfig();
+		
 		configManager = new ConfigManager(this);
 		playerManager = new PlayerManager(this);
 		preGameManager = new PreGameManager(this);
 		gameManager = new GameManager(this);
 		queueManager = new QueueManager(this);
 		databaseManager = new DatabaseManager(this);
-		
-		getConfig().options().copyDefaults();
-		saveDefaultConfig();
 		
 		announcerFile = new File(getDataFolder(), "announcer.yml");
 		if (!announcerFile.exists()) {
@@ -47,13 +47,14 @@ public final class TagCore extends JavaPlugin {
 		announcerYaml = YamlConfiguration.loadConfiguration(announcerFile);
 		
 		final BaseCommand baseCommand = new BaseCommand(this);
+		final TagCommand tagCommand = new TagCommand(this);
 		announcer = new Announcer(this);
 		getCommand("queue").setExecutor(baseCommand);
 		getCommand("queue").setTabCompleter(baseCommand);
-		getCommand("tag").setExecutor(new TagCommand(this));
-		// todo: tab completions for tag command
+		getCommand("tag").setExecutor(tagCommand);
+		getCommand("tag").setTabCompleter(tagCommand);
 		getCommand("announcer").setExecutor(announcer);
-		// todo: tab completions for announcer command
+		getCommand("announcer").setTabCompleter(announcer);
 		
 		getServer().getPluginManager().registerEvents(new Lobby(), this);
 		getServer().getPluginManager().registerEvents(new JoinQuit(this), this);

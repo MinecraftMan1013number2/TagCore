@@ -8,6 +8,10 @@ prefix: "&5[&2Announcer&5]&r"
 # Should all announcements have a line break and after them?
 padding: true
 
+# Sound to play to players when a message is announced. Set to "none" to disable
+# List of valid sounds: https://helpch.at/docs/1.18/org/bukkit/Sound.html
+sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
+
 # How to use actions:
 # "<action:value>Message to broadcast"
 #

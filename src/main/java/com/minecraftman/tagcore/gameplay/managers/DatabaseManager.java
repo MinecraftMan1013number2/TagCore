@@ -5,33 +5,63 @@ import com.minecraftman.tagcore.TagCore;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
 
 public class DatabaseManager {
-	private Connection connection;
+	private Connection connection = null;
 	private final TagCore main;
+	private final String databaseType;
+	
+	
+	private final String HOST;
+	private final String PORT;
+	private final String DATABASE;
+	private final String USERNAME;
+	private final String PASSWORD;
 	
 	public DatabaseManager(TagCore main) {
 		this.main = main;
+		this.databaseType = main.getConfigManager().getDatabaseType();
+		this.HOST = main.getConfigManager().getDatabaseValue("host");
+		this.PORT = main.getConfigManager().getDatabaseValue("port");
+		this.DATABASE = main.getConfigManager().getDatabaseValue("database");
+		this.USERNAME = main.getConfigManager().getDatabaseValue("username");
+		this.PASSWORD = main.getConfigManager().getDatabaseValue("password");
+		
 		setupDatabase();
 	}
 	
 	private void setupDatabase() {
 		try {
-			getConnection().prepareStatement("""
-                CREATE TABLE IF NOT EXISTS tag_playerdata (
-                ID INT AUTO_INCREMENT UNIQUE,
-                UUID VARCHAR(36) NOT NULL UNIQUE,
-                Tokens INT(32) NOT NULL,
-                Inventory BLOB,
-                PRIMARY KEY(ID)
-                )
-                """
-			).execute();
-			
-			main.getLogger().info("Databases created!");
+			if (getConnection() != null) {
+				if (databaseType.equals("sqlite")) {
+					// SQLite
+					getConnection().prepareStatement("""
+							CREATE TABLE IF NOT EXISTS 'tag_playerdata' (
+							UUID VARCHAR(36) NOT NULL PRIMARY KEY UNIQUE,
+							Tokens INT(32) NOT NULL,
+							Inventory MEDIUMTEXT,
+							OffHand VARCHAR(2000)
+							)
+							"""
+					).execute();
+				} else {
+					// MySQL
+					getConnection().prepareStatement("""
+							CREATE TABLE IF NOT EXISTS tag_playerdata (
+							UUID VARCHAR(36) NOT NULL UNIQUE,
+							Tokens INT(32) NOT NULL,
+							Inventory MEDIUMTEXT,
+							OffHand VARCHAR(2000),
+							PRIMARY KEY(UUID)
+							)
+							"""
+					).execute();
+				}
+				
+				main.getLogger().info("Database table created!");
+			}
 		} catch (SQLException e) {
-			main.getLogger().log(Level.SEVERE, "The database could not be created!");
+			main.getLogger().severe("The table could not be created!");
 			throw new RuntimeException(e);
 		}
 	}
@@ -39,23 +69,23 @@ public class DatabaseManager {
 	public Connection getConnection() {
 		if (connection == null) {
 			try {
-//				Class.forName("org.sqlite.JDBC");
-//				connection = DriverManager.getConnection("jdbc:sqlite:"
-//						+ main.getDataFolder().getAbsolutePath() + "/PlayerInfo.db");
-				final String HOST = "localhost";
-				final int PORT = 3306;
-				final String DATABASE = "tagcore";
-				final String USERNAME = "root";
-				final String PASSWORD = "";
-				
-				connection = DriverManager.getConnection(
-						"jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?useSSL=false",
-						USERNAME,
-						PASSWORD
-				);
-			} catch (SQLException e) {
-				main.getLogger().log(Level.SEVERE, "The database could not be connected to!");
-				throw new RuntimeException(e);
+				if (databaseType.equals("sqlite")) {
+					// SQLite
+					Class.forName("org.sqlite.JDBC");
+					connection = DriverManager.getConnection("jdbc:sqlite:"
+							+ main.getDataFolder().getAbsolutePath() + "/PlayerInfo.db");
+				} else {
+					// MySQL
+					connection = DriverManager.getConnection(
+							"jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?useSSL=false",
+							USERNAME,
+							PASSWORD
+					);
+				}
+			} catch (SQLException | ClassNotFoundException e) {
+				main.getLogger().severe("The database could not be connected to!");
+				e.printStackTrace();
+				return null;
 			}
 		}
 		return connection;
@@ -69,8 +99,9 @@ public class DatabaseManager {
 		if (isConnected()) {
 			try {
 				connection.close();
-				main.getLogger().info("Database disconnected!");
+				main.getLogger().info("Database disconnected successfully!");
 			} catch (SQLException e) {
+				main.getLogger().severe("The database was unable to be disconnected from!");
 				throw new RuntimeException(e);
 			}
 		} else {

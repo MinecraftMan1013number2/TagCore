@@ -33,7 +33,7 @@ public class Damage implements Listener {
 						pm.getTeamManager().setTeam(attacker, TeamManager.TagTeam.RUNNER);
 						
 						victim.setMetadata("GottenTaggedRecently", new FixedMetadataValue(main, true));
-						pm.broadcastGame(Chat.translate("&c" + attacker + " has tagged " + victim+ "!"));
+						pm.broadcastGame(Chat.translate("&c" + attacker.getName() + " has tagged " + victim.getName() + "!"));
 						Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
 							victim.setHealth(victim.getHealth() + event.getFinalDamage());
 							

@@ -7,17 +7,19 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Announcer implements CommandExecutor {
+public class Announcer implements CommandExecutor, TabCompleter {
 	private boolean enabled;
 	private final TagCore main;
 	
@@ -57,16 +59,17 @@ public class Announcer implements CommandExecutor {
 							main.getLogger().warning("Action '" + data[0] + "' is invalid! Check announcer.yml for valid actions!");
 					}
 				}
+				boolean soundEnabled = main.getConfigManager().announcerSoundEnabled();
 				if (main.getConfigManager().announcerPadding()) {
 					component.setText("\n" + msg + "\n");
 				} else {
 					component.setText(msg);
 				}
 				Bukkit.getOnlinePlayers().forEach(player -> {
-					player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
+					if (soundEnabled) player.playSound(player.getLocation(), main.getConfigManager().getAnnouncerSound(), 10f, 1f);
 					player.spigot().sendMessage(component);
 				});
-				Bukkit.getConsoleSender().sendMessage(component.getText());
+				Bukkit.getConsoleSender().sendMessage(msg);
 			}
 		}, broadcastFrequency, broadcastFrequency);
 	}
@@ -96,5 +99,10 @@ public class Announcer implements CommandExecutor {
 		}
 		sender.sendMessage(Chat.translate("&3Announcer status: &3&l" + (enabled ? "&cENABLED" : "&cDISABLED")));
 		return true;
+	}
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		return StringUtil.copyPartialMatches(args[0], Arrays.asList("on", "off", "reload"), new ArrayList<>());
 	}
 }

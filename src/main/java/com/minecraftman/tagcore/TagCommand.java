@@ -4,9 +4,15 @@ import com.minecraftman.tagcore.utils.Chat;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
-public class TagCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class TagCommand implements CommandExecutor, TabCompleter {
 	private final TagCore main;
 	public TagCommand(TagCore main) {
 		this.main = main;
@@ -51,5 +57,10 @@ public class TagCommand implements CommandExecutor {
 		}
 		sender.sendMessage(Chat.translate("&6This server is running on &b&l&nTagCore v" + main.getDescription().getVersion() + " - By MinecraftMan1013"));
 		return true;
+	}
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		return StringUtil.copyPartialMatches(args[0], Arrays.asList("stop", "end", "start", "reload"), new ArrayList<>());
 	}
 }

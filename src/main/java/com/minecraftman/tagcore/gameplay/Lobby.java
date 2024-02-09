@@ -43,7 +43,7 @@ public class Lobby implements Listener {
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		if (event.getCurrentItem().getType() == Material.NETHER_STAR || event.getCurrentItem().getType() == Material.CLOCK) {
+		if (event.getCurrentItem() != null && (event.getCurrentItem().getType() == Material.NETHER_STAR || event.getCurrentItem().getType() == Material.CLOCK)) {
 			if (event.getWhoClicked().getGameMode() != GameMode.CREATIVE) {
 				event.setCancelled(true);
 			}

@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class JoinQuit implements Listener {
@@ -26,8 +27,10 @@ public class JoinQuit implements Listener {
 	public void onConnect(PlayerLoginEvent event) {
 		try {
 			new TagPlayer(main, event.getPlayer().getUniqueId());
-		} catch (SQLException e) {
+		} catch (SQLException | NullPointerException e) {
 			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Your data could not be loaded! Tell an administrator to check console!");
+			throw new RuntimeException(e);
+		} catch (IOException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -75,6 +78,8 @@ public class JoinQuit implements Listener {
 			}
 		}
 		
+		// todo: find out why this doesnt work when server stops during a game
+		// theory: HashMap is cleared before the players get kicked, so TagPlayer instances dont exist anymore
 		if (main.getPlayerManager().isPlaying(player))
 			TagPlayer.getTagPlayer(player.getUniqueId()).saveItems();
 	}

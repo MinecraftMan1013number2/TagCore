@@ -69,7 +69,6 @@ public class PlayerManager {
 		teamManager.removeTeam(player);
 		
 		Bukkit.getServer().dispatchCommand(player, "spawn");
-		// wait 1 tick?
 		player.getInventory().clear();
 		Lobby.setLobbyInventory(player);
 		player.sendMessage(Chat.translate("&aYou have left the game."));

@@ -17,7 +17,7 @@ game:
   # 20 ticks = 1 second
   tagger-cooldown: 20
 
-  # How long the title stays that tells the tagger they've been tagged (ticks) Default: 20
+  # How long the title stays that tells the tagger they've been tagged (ticks) Default: 40
   # 20 ticks = 1 second
   tagger-title: 40
 
@@ -26,7 +26,19 @@ tokens:
   playtime:
     occurrence: 3
     amount: 10
-  # Tokens GIVEN when a player tags another player
+  # Tokens GIVEN to tagger when they tag another player
   on-tag: 3
-  # Tokens TAKEN when a player gets tagged by another player
+  # Tokens TAKEN from player when they get tagged
   on-tagged: 1
+
+# NOTE: You must restart the server to modify any of these values. Data will not be auto-transferred between databases
+database:
+  # Can be MySQL or SQLite
+  type: sqlite
+
+  # MySQL options
+  host: "localhost"
+  port: 3306
+  database: "tagcore"
+  username: "root"
+  password: ''

@@ -90,7 +90,7 @@ public class GameManager {
 			main.getQueueManager().clearQueue();
 			main.getPlayerManager().flushPlayers();
 			Bukkit.broadcastMessage("");
-			Bukkit.broadcastMessage(Chat.translate("  &eThe tag game has ended!"));
+			Bukkit.broadcastMessage(Chat.translate(" &eThe tag game has ended!"));
 			Bukkit.broadcastMessage("");
 			if (sender != null) {
 				sender.sendMessage(Chat.translate("&eYou have ended the game!"));

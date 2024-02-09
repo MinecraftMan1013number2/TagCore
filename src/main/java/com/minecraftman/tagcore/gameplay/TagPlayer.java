@@ -6,8 +6,10 @@ import com.minecraftman.tagcore.utils.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,8 +32,9 @@ public class TagPlayer {
 	private final UUID uuid;
 	private int tokens;
 	private Inventory savedInventory;
+	private ItemStack savedOffHand;
 	
-	public TagPlayer(TagCore main, UUID uuid) throws SQLException {
+	public TagPlayer(TagCore main, UUID uuid) throws SQLException, IOException, ClassNotFoundException {
 		this.uuid = uuid;
 		players.put(uuid, this);
 		this.main = main;
@@ -41,12 +44,14 @@ public class TagPlayer {
 		ResultSet resultSet = tokensStatement.executeQuery();
 		if (resultSet.next()) {
 			tokens = resultSet.getInt("Tokens");
-			savedInventory = InventoryUtils.deserializePlayerInventory(resultSet.getBytes("Inventory"));
+			savedInventory = InventoryUtils.deserializeInventory(resultSet.getString("Inventory"));
+			savedOffHand = InventoryUtils.deserializeItem(resultSet.getString("OffHand"))[0];
 		} else {
 			// Add to database
 			tokens = 0;
-			PreparedStatement insert = main.getDatabaseManager().getConnection().prepareStatement("INSERT INTO tag_playerdata (ID, UUID, Tokens) VALUES (" +
-					"default," +
+			savedInventory = null;
+			savedOffHand = null;
+			PreparedStatement insert = main.getDatabaseManager().getConnection().prepareStatement("INSERT INTO tag_playerdata (UUID, Tokens) VALUES (" +
 					"?," +
 					"0);"
 			);
@@ -76,12 +81,21 @@ public class TagPlayer {
 	
 	public void saveItems() {
 		savedInventory = Bukkit.getPlayer(uuid).getInventory();
+		savedOffHand = Bukkit.getPlayer(uuid).getInventory().getItemInOffHand();
 		
 		try {
-			byte[] serializedInv = InventoryUtils.serializeInventory(savedInventory);
-			PreparedStatement statement = main.getDatabaseManager().getConnection().prepareStatement("UPDATE tag_playerdata SET Inventory = ? WHERE UUID = ?;");
-			statement.setString(2, uuid.toString());
-			statement.setBytes(1, serializedInv);
+			String serializedInv = InventoryUtils.serializeInventory(savedInventory);
+			String serializedOffHand = InventoryUtils.serializeItem(new ItemStack[]{savedOffHand});
+			if (serializedInv.length() > 25000 || serializedOffHand.length() > 2000) {
+				Player player = Bukkit.getPlayer(uuid);
+				if (player != null)
+					player.sendMessage(Chat.translate("&cYou have too many items in your inventory!"));
+				throw new SQLException();
+			}
+			PreparedStatement statement = main.getDatabaseManager().getConnection().prepareStatement("UPDATE tag_playerdata SET Inventory = ?, OffHand = ? WHERE UUID = ?;");
+			statement.setString(3, uuid.toString());
+			statement.setString(2, serializedOffHand);
+			statement.setString(1, serializedInv);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			Player player = Bukkit.getPlayer(uuid);
@@ -92,8 +106,10 @@ public class TagPlayer {
 	}
 	
 	public void restoreItems() {
+		if (savedInventory == null) return;
 		PlayerInventory inv = Bukkit.getPlayer(uuid).getInventory();
 		inv.clear();
 		inv.setContents(savedInventory.getContents());
+		inv.setItemInOffHand(savedOffHand);
 	}
 }
