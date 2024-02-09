@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class GameManager {
 	private boolean gameRunning = false;
-	Timer timer = null;
+	private Timer timer = null;
 	
 	private final TagCore main;
 	
@@ -39,8 +39,11 @@ public class GameManager {
 					String grammar = (timeLeft.startsWith("1 ") ? "is" : "are");
 					additionalMsg = new String[]{"", Chat.translate(" &eThere " + grammar + " &6" + timeLeft + "&e left!"), ""};
 				}
+				
+				main.getSidebarManager().setSuffix("timer", "&7" + timer.getFormattedTimeRemaining());
 			} else {
 				component = TextComponent.fromLegacyText(Chat.translate("&bThere is no game running!"));
+				main.getSidebarManager().setSuffix("timer", "&7None");
 			}
 			String[] finalAdditionalMsg = additionalMsg;
 			Bukkit.getOnlinePlayers().forEach(player -> {

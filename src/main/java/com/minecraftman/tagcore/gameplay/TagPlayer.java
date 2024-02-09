@@ -23,6 +23,7 @@ public class TagPlayer {
 		return players.get(uuid);
 	}
 	public static void removeTagPlayer(UUID uuid) {
+		Bukkit.getPlayer(uuid).setScoreboard(null);
 		players.remove(uuid);
 	}
 	
@@ -58,6 +59,8 @@ public class TagPlayer {
 			insert.setString(1, uuid.toString());
 			insert.executeUpdate();
 		}
+		
+		main.getSidebarManager().setDynamicSidebarLine("tokens-" + Bukkit.getPlayer(uuid).getName(), 1, "&7&l» ", "&6" + tokens);
 	}
 	
 	public void removeTagTokens(int tokens) {
@@ -66,6 +69,7 @@ public class TagPlayer {
 	
 	public void addTagTokens(int tokens) {
 		this.tokens += tokens;
+		main.getSidebarManager().setSuffix("tokens-" + Bukkit.getPlayer(uuid).getName(), "&6" + tokens);
 		try {
 			PreparedStatement statement = main.getDatabaseManager().getConnection().prepareStatement("UPDATE tag_playerdata SET Tokens = " + this.tokens + " WHERE UUID = ?;");
 			statement.setString(1, uuid.toString());

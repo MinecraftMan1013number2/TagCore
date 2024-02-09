@@ -5,6 +5,7 @@ import com.minecraftman.tagcore.gameplay.events.Damage;
 import com.minecraftman.tagcore.gameplay.events.JoinQuit;
 import com.minecraftman.tagcore.gameplay.events.WorldChange;
 import com.minecraftman.tagcore.gameplay.managers.*;
+import com.minecraftman.tagcore.gameplay.managers.scoreboard.SidebarManager;
 import com.minecraftman.tagcore.queue.BaseCommand;
 import com.minecraftman.tagcore.queue.QueueManager;
 import com.minecraftman.tagcore.server.Announcer;
@@ -26,6 +27,7 @@ public final class TagCore extends JavaPlugin {
 	private static PlayerManager playerManager;
 	private static QueueManager queueManager;
 	private static DatabaseManager databaseManager;
+	private static SidebarManager sidebarManager;
 	
 	@Override
 	public void onEnable() {
@@ -38,6 +40,9 @@ public final class TagCore extends JavaPlugin {
 		gameManager = new GameManager(this);
 		queueManager = new QueueManager(this);
 		databaseManager = new DatabaseManager(this);
+		sidebarManager = new SidebarManager();
+		
+		setupSidebar();
 		
 		announcerFile = new File(getDataFolder(), "announcer.yml");
 		if (!announcerFile.exists()) {
@@ -98,10 +103,32 @@ public final class TagCore extends JavaPlugin {
 		return announcerYaml;
 	}
 	
+	public SidebarManager getSidebarManager() {
+		return sidebarManager;
+	}
+	
 	
 	
 	public void reloadAnnouncer() {
 		announcerYaml = YamlConfiguration.loadConfiguration(announcerFile);
 		announcer = new Announcer(this);
+	}
+	
+	/**
+	 * Sets up the sidebar for the server. Dynamic lines are set up in {@link com.minecraftman.tagcore.gameplay.TagPlayer}
+	 */
+	private void setupSidebar() {
+		sidebarManager.createSidebar("tag", Chat.translate("&9&lTag!"));
+		sidebarManager.setStaticSidebarLine("&9&l&m                    ", 10);
+		sidebarManager.setStaticSidebarLine("&9&lCurrent Game:", 9);
+		sidebarManager.setDynamicSidebarLine("tagger", 8, "&7&l» &7Tagger: ", "&7None");
+		sidebarManager.setDynamicSidebarLine("timer", 7, "&7&l» &7Timer: ", "&7None");
+		sidebarManager.setStaticSidebarLine("&l&r", 6);
+		sidebarManager.setStaticSidebarLine("&9&lPlayers online:", 5);
+		sidebarManager.setDynamicSidebarLine("playercount", 4, "&7&l» ", "&70/10");
+		sidebarManager.setStaticSidebarLine("&e", 3);
+		sidebarManager.setStaticSidebarLine("&9&lTag Tokens:", 2);
+		// Line 1 is a dynamic per-player line, so it is registered in TagPlayer
+		sidebarManager.setStaticSidebarLine("&9&l&m                    ", 0);
 	}
 }
