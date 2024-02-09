@@ -8,40 +8,32 @@ import java.sql.SQLException;
 
 public class DatabaseManager {
 	private Connection connection = null;
-	private static TagCore main;
-	private final MySQL mySQLData;
+	private final TagCore main;
+	private final String databaseType;
 	
-	public DatabaseManager(TagCore mainClass) {
-		main = mainClass;
-		if (main.getConfigManager().getDatabaseType().equals("mysql")) {
-			mySQLData = new DatabaseManager.MySQL();
-		} else {
-			mySQLData = null;
-		}
-	}
 	
-	public class MySQL {
-		public final String HOST;
-		public final String PORT;
-		public final String DATABASE;
-		public final String USERNAME;
-		public final String PASSWORD;
+	private final String HOST;
+	private final String PORT;
+	private final String DATABASE;
+	private final String USERNAME;
+	private final String PASSWORD;
+	
+	public DatabaseManager(TagCore main) {
+		this.main = main;
+		this.databaseType = main.getConfigManager().getDatabaseType();
+		this.HOST = main.getConfigManager().getDatabaseValue("host");
+		this.PORT = main.getConfigManager().getDatabaseValue("port");
+		this.DATABASE = main.getConfigManager().getDatabaseValue("database");
+		this.USERNAME = main.getConfigManager().getDatabaseValue("username");
+		this.PASSWORD = main.getConfigManager().getDatabaseValue("password");
 		
-		public MySQL() {
-			this.HOST = main.getConfigManager().getDatabaseValue("host");
-			this.PORT = main.getConfigManager().getDatabaseValue("port");
-			this.DATABASE = main.getConfigManager().getDatabaseValue("database");
-			this.USERNAME = main.getConfigManager().getDatabaseValue("username");
-			this.PASSWORD = main.getConfigManager().getDatabaseValue("password");
-			
-			setupDatabase();
-		}
+		setupDatabase();
 	}
 	
 	private void setupDatabase() {
 		try {
 			if (getConnection() != null) {
-				if (mySQLData == null) {
+				if (databaseType.equals("sqlite")) {
 					// SQLite
 					getConnection().prepareStatement("""
 							CREATE TABLE IF NOT EXISTS 'tag_playerdata' (
@@ -77,7 +69,7 @@ public class DatabaseManager {
 	public Connection getConnection() {
 		if (connection == null) {
 			try {
-				if (mySQLData == null) {
+				if (databaseType.equals("sqlite")) {
 					// SQLite
 					Class.forName("org.sqlite.JDBC");
 					connection = DriverManager.getConnection("jdbc:sqlite:"
@@ -85,9 +77,9 @@ public class DatabaseManager {
 				} else {
 					// MySQL
 					connection = DriverManager.getConnection(
-							"jdbc:mysql://" + mySQLData.HOST + ":" + mySQLData.PORT + "/" + mySQLData.DATABASE + "?useSSL=false",
-							mySQLData.USERNAME,
-							mySQLData.PASSWORD
+							"jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?useSSL=false",
+							USERNAME,
+							PASSWORD
 					);
 				}
 			} catch (SQLException | ClassNotFoundException e) {
