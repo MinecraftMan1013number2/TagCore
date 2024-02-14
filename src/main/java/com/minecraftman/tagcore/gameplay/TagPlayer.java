@@ -36,11 +36,12 @@ public class TagPlayer {
 	private ItemStack savedOffHand;
 	
 	public TagPlayer(TagCore main, UUID uuid) throws SQLException, IOException, ClassNotFoundException {
+//		if (main.getDatabaseManager().isConnected()) {
 		this.uuid = uuid;
 		players.put(uuid, this);
 		this.main = main;
-
-		PreparedStatement tokensStatement = main.getDatabaseManager().getConnection().prepareStatement("SELECT Tokens,Inventory FROM tag_playerdata WHERE UUID = ?;");
+		
+		PreparedStatement tokensStatement = main.getDatabaseManager().getConnection().prepareStatement("SELECT Tokens,Inventory,OffHand FROM tag_playerdata WHERE UUID = ?;");
 		tokensStatement.setString(1, uuid.toString());
 		ResultSet resultSet = tokensStatement.executeQuery();
 		if (resultSet.next()) {

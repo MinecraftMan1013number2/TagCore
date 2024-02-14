@@ -117,7 +117,7 @@ public class ConfigManager {
 		if (type == null || (!type.equalsIgnoreCase("mysql") && !type.equalsIgnoreCase("sqlite"))) {
 			return "sqlite";
 		}
-		return type;
+		return type.toLowerCase();
 	}
 	
 	public String getDatabaseValue(String subpath) {

@@ -34,15 +34,18 @@ public final class TagCore extends JavaPlugin {
 		getConfig().options().copyDefaults();
 		saveDefaultConfig();
 		
-		configManager = new ConfigManager(this);
 		playerManager = new PlayerManager(this);
 		preGameManager = new PreGameManager(this);
 		gameManager = new GameManager(this);
 		queueManager = new QueueManager(this);
-		databaseManager = new DatabaseManager(this);
 		sidebarManager = new SidebarManager();
 		
 		setupSidebar();
+		
+		// Instantiate config manager last to avoid a weird glitch
+		// database manager needs config values, so instantiate it afterward
+		configManager = new ConfigManager(this);
+		databaseManager = new DatabaseManager(this);
 		
 		announcerFile = new File(getDataFolder(), "announcer.yml");
 		if (!announcerFile.exists()) {

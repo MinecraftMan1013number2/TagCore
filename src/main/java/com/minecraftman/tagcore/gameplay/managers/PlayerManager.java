@@ -5,10 +5,8 @@ import com.minecraftman.tagcore.gameplay.Lobby;
 import com.minecraftman.tagcore.gameplay.TagPlayer;
 import com.minecraftman.tagcore.gameplay.managers.scoreboard.TeamManager;
 import com.minecraftman.tagcore.utils.Chat;
-import com.minecraftman.tagcore.utils.TagArmor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -97,12 +95,12 @@ public class PlayerManager {
 		tagger = player;
 		if (tagger != null) {
 			tagger.sendTitle(Chat.translate("&4&lYou are the tagger!"), Chat.translate("&cTag other people!"), 10, main.getConfigManager().getTitleTicks(), 20);
-			tagger.getInventory().setArmorContents(new ItemStack[]{
-					TagArmor.getTaggerBoots(),
-					TagArmor.getTaggerLeggings(),
-					TagArmor.getTaggerChestplate(),
-					TagArmor.getTaggerSkull()
-			});
+//			tagger.getInventory().setArmorContents(new ItemStack[]{
+//					TagArmor.getTaggerBoots(),
+//					TagArmor.getTaggerLeggings(),
+//					TagArmor.getTaggerChestplate(),
+//					TagArmor.getTaggerSkull()
+//			});
 			main.getPlayerManager().getTeamManager().setTeam(tagger, TeamManager.TagTeam.TAGGER);
 			
 			main.getSidebarManager().setSuffix("tagger", "&7" + tagger.getName());
