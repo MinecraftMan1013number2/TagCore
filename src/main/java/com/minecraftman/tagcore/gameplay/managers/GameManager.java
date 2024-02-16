@@ -1,6 +1,7 @@
 package com.minecraftman.tagcore.gameplay.managers;
 
 import com.minecraftman.tagcore.TagCore;
+import com.minecraftman.tagcore.gameplay.managers.scoreboard.CustomSidebar;
 import com.minecraftman.tagcore.utils.Chat;
 import com.minecraftman.tagcore.utils.Timer;
 import net.md_5.bungee.api.ChatMessageType;
@@ -40,10 +41,10 @@ public class GameManager {
 					additionalMsg = new String[]{"", Chat.translate(" &eThere " + grammar + " &6" + timeLeft + "&e left!"), ""};
 				}
 				
-				main.getSidebarManager().setSuffix("timer", "&7" + timer.getFormattedTimeRemaining());
+				CustomSidebar.updateTimer(timer.getFormattedTimeRemaining());
 			} else {
 				component = TextComponent.fromLegacyText(Chat.translate("&bThere is no game running!"));
-				main.getSidebarManager().setSuffix("timer", "&7None");
+				CustomSidebar.updateTimer("None");
 			}
 			String[] finalAdditionalMsg = additionalMsg;
 			Bukkit.getOnlinePlayers().forEach(player -> {

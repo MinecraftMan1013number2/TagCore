@@ -3,6 +3,7 @@ package com.minecraftman.tagcore.gameplay.managers;
 import com.minecraftman.tagcore.TagCore;
 import com.minecraftman.tagcore.gameplay.Lobby;
 import com.minecraftman.tagcore.gameplay.TagPlayer;
+import com.minecraftman.tagcore.gameplay.managers.scoreboard.CustomSidebar;
 import com.minecraftman.tagcore.gameplay.managers.scoreboard.TeamManager;
 import com.minecraftman.tagcore.utils.Chat;
 import org.bukkit.Bukkit;
@@ -103,9 +104,9 @@ public class PlayerManager {
 //			});
 			main.getPlayerManager().getTeamManager().setTeam(tagger, TeamManager.TagTeam.TAGGER);
 			
-			main.getSidebarManager().setSuffix("tagger", "&7" + tagger.getName());
+			CustomSidebar.updateTagger(tagger.getName());
 		} else {
-			main.getSidebarManager().setSuffix("tagger", "&7None");
+			CustomSidebar.updateTagger("None");
 		}
 	}
 	

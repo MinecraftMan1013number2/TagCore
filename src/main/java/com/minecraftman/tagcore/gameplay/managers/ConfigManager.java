@@ -15,14 +15,20 @@ public class ConfigManager {
 	public ConfigManager(TagCore main) {
 		this.main = main;
 		
+		boolean modified = false;
 		Set<String> currentKeys = mainConfig().getKeys(true);
 		for (String defaultKey : mainConfig().getDefaults().getKeys(true)) {
 			if (!currentKeys.contains(defaultKey)) {
 				main.getLogger().warning("Adding path '" + defaultKey + "' to the config");
 				mainConfig().set(defaultKey, mainConfig().getDefaults().get(defaultKey));
+				modified = true;
 			}
 		}
-		main.saveConfig();
+		if (modified) {
+			main.getLogger().warning("THE ABOVE MESSAGES ARE SAFE TO IGNORE!");
+			main.getLogger().warning("They are simply to inform you of any config updates.");
+			main.saveConfig();
+		}
 	}
 	
 	/* GENERAL OPTIONS */

@@ -73,7 +73,7 @@ public class DatabaseManager {
 					// SQLite
 					Class.forName("org.sqlite.JDBC");
 					connection = DriverManager.getConnection("jdbc:sqlite:"
-							+ main.getDataFolder().getAbsolutePath() + "/PlayerInfo.db");
+							+ main.getDataFolder().getAbsolutePath() + "\\PlayerInfo.db");
 				} else {
 					// MySQL
 					connection = DriverManager.getConnection(

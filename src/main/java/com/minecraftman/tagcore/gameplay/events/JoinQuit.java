@@ -30,7 +30,7 @@ public class JoinQuit implements Listener {
 		} catch (SQLException | NullPointerException e) {
 			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Your data could not be loaded! Tell an administrator to check console!");
 			throw new RuntimeException(e);
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -48,16 +48,12 @@ public class JoinQuit implements Listener {
 		if (!player.isOp()) player.getInventory().clear();
 		
 		Lobby.setLobbyInventory(player);
-		
-		main.getSidebarManager().setCustomScoreboard(player);
-		main.getSidebarManager().setSuffix("playercount", "&7" + Bukkit.getOnlinePlayers().size() + "/10");
+		TagPlayer.getTagPlayer(player.getUniqueId()).createSidebar();
 	}
 	
 	@EventHandler
 	public void onQuit(@NotNull PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		
-		main.getSidebarManager().setSuffix("playercount", "&7" + Bukkit.getOnlinePlayers().size() + "/10");
 		
 		TagPlayer.removeTagPlayer(player.getUniqueId());
 		
